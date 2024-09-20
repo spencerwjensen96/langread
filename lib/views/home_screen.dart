@@ -1,19 +1,25 @@
 // lib/views/home_screen.dart
 import 'package:flutter/material.dart';
+import 'package:langread/models/book.dart';
 import 'library_view.dart';
 import 'reading_view.dart';
 import 'settings_view.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
-    _HomeScreenState createState() => _HomeScreenState();
-  }
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  static Book lastReadBook = Book(
+      id: 0,
+      title: 'Sample Book 1',
+      author: 'Author 1',
+      coverUrl: 'https://via.placeholder.com/150');
   static final List<Widget> _widgetOptions = <Widget>[
     LibraryView(),
-    ReadingView(),
+    ReadingView(book: lastReadBook),
     SettingsView(),
   ];
 

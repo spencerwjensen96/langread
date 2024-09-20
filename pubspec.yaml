@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   file_picker: ^8.1.2
+  provider: ^6.1.2
   uuid: ^4.4.2
   flutter:
     sdk: flutter

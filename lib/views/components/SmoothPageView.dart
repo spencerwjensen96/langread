@@ -1,4 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../models/settings.dart';
 
 class SmoothPageView extends StatefulWidget {
   final List<String> pages;
@@ -64,8 +67,10 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                 }
                 return Center(
                   child: SizedBox(
-                    height: MediaQuery.of(context).size.height * Curves.easeInOut.transform(value),
-                    width: MediaQuery.of(context).size.width * Curves.easeInOut.transform(value),
+                    height: MediaQuery.of(context).size.height *
+                        Curves.easeInOut.transform(value),
+                    width: MediaQuery.of(context).size.width *
+                        Curves.easeInOut.transform(value),
                     child: child,
                   ),
                 );
@@ -81,7 +86,8 @@ class _SmoothPageViewState extends State<SmoothPageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Page ${_currentPage.floor() + 1} of ${widget.pages.length}'),
+              Text(
+                  'Page ${_currentPage.floor() + 1} of ${widget.pages.length}'),
               Row(
                 children: [
                   IconButton(
@@ -112,33 +118,68 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   }
 }
 
-class PageContent extends StatelessWidget {
+class PageContent extends StatefulWidget {
   final String content;
 
   const PageContent({Key? key, required this.content}) : super(key: key);
 
   @override
+  _PageContentState createState() => _PageContentState();
+}
+
+class _PageContentState extends State<PageContent> {
+  late List<bool> _wordTapped;
+
+  @override
+  void initState() {
+    super.initState();
+    _wordTapped = List.filled(widget.content.split(' ').length, false);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 5,
-            spreadRadius: 1,
+    return Consumer<SettingsModel>(
+      builder: (context, settings, child) {
+        final words = widget.content.split(' ');
+        return Container(
+          decoration: BoxDecoration(
+            color: settings.themeMode == ThemeMode.dark
+                ? Colors.black
+                : Colors.white,
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Text(
-            content,
-            style: TextStyle(fontSize: 24, height: 2.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: RichText(
+                text: TextSpan(
+                  children: words.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final word = entry.value;
+                    return TextSpan(
+                      text: '$word ',
+                      style: TextStyle(
+                        fontSize: settings.fontSize,
+                        height: 2.0,
+                        color: _wordTapped[index]
+                            ? Colors.blue
+                            : (settings.themeMode == ThemeMode.dark
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          setState(() {
+                            _wordTapped[index] = !_wordTapped[index];
+                          });
+                        },
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
