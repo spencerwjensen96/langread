@@ -64,8 +64,8 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                 }
                 return Center(
                   child: SizedBox(
-                    height: Curves.easeInOut.transform(value) * 700,
-                    width: Curves.easeInOut.transform(value) * 400,
+                    height: MediaQuery.of(context).size.height * Curves.easeInOut.transform(value),
+                    width: MediaQuery.of(context).size.width * Curves.easeInOut.transform(value),
                     child: child,
                   ),
                 );
@@ -135,7 +135,7 @@ class PageContent extends StatelessWidget {
         child: SingleChildScrollView(
           child: Text(
             content,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 24, height: 2.0),
           ),
         ),
       ),

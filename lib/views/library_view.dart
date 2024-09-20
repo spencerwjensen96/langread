@@ -1,12 +1,16 @@
 // lib/views/library_view.dart
 import 'package:flutter/material.dart';
+import 'package:langread/views/home_screen.dart';
+// import 'package:uuid/uuid.dart';
 import '../models/book.dart';
+import '../utils/library_utils.dart';
+import 'reading_view.dart';
 
 class LibraryView extends StatelessWidget {
   final List<Book> books = [
-    Book(title: 'Sample Book 1', author: 'Author 1', coverUrl: 'https://via.placeholder.com/150'),
-    Book(title: 'Sample Book 2', author: 'Author 2', coverUrl: 'https://via.placeholder.com/150'),
-    // Add more sample books here
+    Book(id: 0, title: 'Sample Book 1', author: 'Author 1', coverUrl: 'https://via.placeholder.com/150'),
+    Book(id: 1, title: 'Sample Book 2', author: 'Author 2', coverUrl: 'https://via.placeholder.com/150'),
+    Book(id: 2, title: 'Broderna Lejonhjarta', author: 'Astrid Lindgren', coverUrl: 'https://via.placeholder.com/150'),
   ];
 
   @override
@@ -29,8 +33,8 @@ class LibraryView extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Implement book import functionality
+        onPressed: () async {
+          var result_file = importFile();
         },
         tooltip: 'Import Book',
         child: const Icon(Icons.add),
@@ -48,7 +52,12 @@ class BookCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO: Navigate to ReadingView with the selected book
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReadingView(book: book),
+          ),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

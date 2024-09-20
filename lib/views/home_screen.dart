@@ -6,8 +6,8 @@ import 'settings_view.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
+    _HomeScreenState createState() => _HomeScreenState();
+  }
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
