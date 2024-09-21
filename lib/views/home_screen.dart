@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  bool _isReading = false;
   static Book lastReadBook = Book(
       id: 0,
       title: 'Sample Book 1',
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      index == 1 ? _isReading = true : _isReading = false;
     });
   }
 
@@ -35,19 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: _isReading ? null : BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: 'Library',
+        icon: Icon(Icons.library_books),
+        label: 'Library',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Read',
+        icon: Icon(Icons.book),
+        label: 'Read',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+        icon: Icon(Icons.settings),
+        label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,

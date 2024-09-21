@@ -21,6 +21,11 @@ class LibraryView extends StatelessWidget {
         coverUrl: 'https://via.placeholder.com/150'),
     Book(
         id: 2,
+        title: 'Brothers Lionheart',
+        author: 'Astrid Lindgren',
+        coverUrl: 'https://via.placeholder.com/150'),
+    Book(
+        id: 3,
         title: 'Broderna Lejonhjarta',
         author: 'Astrid Lindgren',
         coverUrl: 'https://via.placeholder.com/150'),

@@ -159,7 +159,7 @@ class _PageContentState extends State<PageContent> {
                       text: '$word ',
                       style: TextStyle(
                         fontSize: settings.fontSize,
-                        height: 2.0,
+                        height: settings.lineHeight,
                         color: _wordTapped[index]
                             ? Colors.blue
                             : (settings.themeMode == ThemeMode.dark
@@ -168,6 +168,32 @@ class _PageContentState extends State<PageContent> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
+                          if (!_wordTapped[index]) {
+                            // Fetch the meaning from a dictionary.
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: ((context) {
+                                    return Container(
+                                    height: 300,
+                                    child: const SingleChildScrollView(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(32.0),
+                                        child: 
+                                          Text(
+                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                                            'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                                            'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                                            'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+                                            'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                }));
+                          }
                           setState(() {
                             _wordTapped[index] = !_wordTapped[index];
                           });

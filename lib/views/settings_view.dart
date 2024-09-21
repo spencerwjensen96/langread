@@ -29,6 +29,20 @@ class SettingsView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const Text(
+                'Font Height',
+              ),
+              Slider(
+                value: settings.lineHeight,
+                min: 1.0,
+                max: 2.0,
+                divisions: 10,
+                label: settings.lineHeight.toString(),
+                onChanged: (value) {
+                  settings.setLineHeight(value);
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
                 'Theme',
               ),
               RadioListTile<ThemeMode>(
