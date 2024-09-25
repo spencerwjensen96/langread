@@ -1,0 +1,197 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+class QuizPopup extends StatefulWidget {
+  final String pageContent;
+  final List<String> words;
+  final String sourceLanguage;
+  final String targetLanguage;
+  final VoidCallback onQuizComplete;
+
+  const QuizPopup({
+    Key? key,
+    required this.pageContent,
+    required this.words,
+    required this.sourceLanguage,
+    required this.targetLanguage,
+    required this.onQuizComplete,
+  }) : super(key: key);
+
+  @override
+  _QuizPopupState createState() => _QuizPopupState();
+}
+
+class _QuizPopupState extends State<QuizPopup> {
+  late Future<List<Map<String, dynamic>>> _questionsFuture;
+  late List<Map<String, dynamic>> _questions = [];
+  late bool _showQuiz = false;
+  int currentQuestionIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _questionsFuture = generateQuestions(
+        widget.words, widget.sourceLanguage, widget.targetLanguage);
+  }
+
+  Future<String> fetchQuizFromChatGPT(
+      List<String> words, String sourceLanguage, String targetLanguage) async {
+    var apiKey = dotenv.env['OPENAI_API_KEY']!;
+    var model = 'gpt-3.5-turbo';
+    var example = """
+{
+  "words": [
+    {
+      "word": "ifrån",
+      "sentence": "Hon flyttade ifrån Stockholm för att börja ett nytt jobb i Malmö.",
+      "translation": "She moved away from Stockholm to start a new job in Malmö."
+    },
+  ]
+}
+""";
+    var prompt = """
+You are a language tutor teaching an $targetLanguage student $sourceLanguage. You are focused on helping learners understand vocabulary through context. When provided with a list of vocabulary words, your task is to create one unique, well-formed sentence for each word. These sentences should clearly demonstrate the meaning and usage of the word in context. Ensure that each sentence:
+
+Is grammatically correct.
+Reflects the common or natural usage of the word.
+Avoids repetitive sentence structures across different words.
+Matches the general difficulty level of an intermediate language learner, unless otherwise specified.
+Do not use the vocabulary words in overly complex or obscure contexts; the goal is for the learner to easily grasp the meaning of the word through your sentence.
+
+Return the the word, sentence, and translation in json format
+Example:
+$example
+""";
+    var continuation = 'The list of words is "${words.join('", "')}".';
+
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/chat/completions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $apiKey',
+      },
+      body: jsonEncode({
+        'model': model,
+        'messages': [
+          {'role': 'system', 'content': prompt},
+          {'role': 'user', 'content': continuation}
+        ],
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(utf8.decode(response.body.codeUnits));
+      return data['choices'][0]['message']['content'];
+    } else {
+      throw Exception('Failed to fetch quiz from ChatGPT');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> generateQuestions(
+      List<String> words, String sourceLanguage, String targetLanguage) async {
+    // This is a placeholder. In a real app, you'd implement more sophisticated
+    // question generation based on the content.
+    // print('$words, $sourceLanguage, $targetLanguage');
+    var response =
+        await fetchQuizFromChatGPT(words, sourceLanguage, targetLanguage);
+    print("RESPONSE: $response");
+    for (var entry in jsonDecode(response)['words']) {
+      _questions.add({
+        'question': '${entry["word"]}',
+        'options': [
+          '${entry["translation"]}',
+          '${entry["sentence"]}',
+          'Option C',
+          'Option D',
+        ],
+        'correctAnswer': '${entry["translation"]}',
+      });
+    }
+    return _questions;
+    // return [
+    //   {
+    //     'question': 'What is this page about?',
+    //     'options': ['Option A', 'Option B', 'Option C', 'Option D'],
+    //     'correctAnswer': 'Option A',
+    //   },
+    //   {
+    //     'question': 'What is a key concept mentioned in this page?',
+    //     'options': ['Concept 1', 'Concept 2', 'Concept 3', 'Concept 4'],
+    //     'correctAnswer': 'Concept 2',
+    //   },
+    // ];
+  }
+
+  void answerQuestion(String answer) {
+    if (currentQuestionIndex < _questions.length - 1) {
+      setState(() {
+        currentQuestionIndex++;
+      });
+    } else {
+      widget.onQuizComplete();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // final question = _questions;
+    return FutureBuilder(
+        future: _questionsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No questions available'));
+          } else {
+            // print('Questions: $_questions');
+
+            return Scaffold(
+                appBar: AppBar(
+                  title:  Text('Quiz'),
+                ),
+                body: FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _questionsFuture,
+                    builder: (context, snapshot) {
+                      // List<Map<String, dynamic>> questions = snapshot.data!;
+                      var question = _questions[currentQuestionIndex];
+                      return Padding(
+                        padding: const EdgeInsets.all(48.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              question['question'],
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 20),
+                            ...question['options'].map((option) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: ElevatedButton(
+                                    onPressed: () => answerQuestion(option),
+                                    child: Text(option),
+                                  ),
+                                )),
+                            Expanded(
+                                child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: ElevatedButton(
+                                      onPressed: widget.onQuizComplete,
+                                      child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text('Continue Reading')),
+                                    )))
+                          ],
+                        ),
+                      );
+                    }));
+          }
+        });
+  }
+}

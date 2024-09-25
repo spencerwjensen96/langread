@@ -28,7 +28,7 @@ class LibraryView extends StatelessWidget {
         id: 3,
         title: 'Broderna Lejonhjarta',
         author: 'Astrid Lindgren',
-        coverUrl: 'https://via.placeholder.com/150'),
+        coverUrl: 'https://somewhereboy.wordpress.com/wp-content/uploads/2017/09/the-brothers-lionheart.jpg'),
   ];
 
   @override

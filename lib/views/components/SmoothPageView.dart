@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:langread/views/components/DictionaryEntry.dart';
+import 'package:langread/views/components/QuizPopup.dart';
 import 'package:provider/provider.dart';
 import '../../models/settings.dart';
 
@@ -15,6 +17,9 @@ class SmoothPageView extends StatefulWidget {
 class _SmoothPageViewState extends State<SmoothPageView> {
   late PageController _pageController;
   double _currentPage = 0;
+  bool _showingQuiz = false;
+  bool _hasInteracted = false;
+  List<String> _interactedWords = <String>[];
 
   @override
   void initState() {
@@ -33,24 +38,45 @@ class _SmoothPageViewState extends State<SmoothPageView> {
     super.dispose();
   }
 
+  void _onInteraction(String word) {
+    setState(() {
+      _hasInteracted = true;
+    });
+    _interactedWords.add(word);
+    // print(_interactedWords);
+  }
+
+  void _navigateToPreviousPage() {
+    if (_pageController.hasClients) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      // _interactedWords.clear();
+    }
+  }
+
+  void _navigateToNextPage() {
+    if (_pageController.hasClients) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      // _interactedWords.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    const duration = Duration(milliseconds: 300);
     return Scaffold(
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity! > 0) {
             // Swipe right
-            _pageController.previousPage(
-              duration: duration,
-              curve: Curves.easeInOut,
-            );
+            _navigateToPreviousPage();
           } else if (details.primaryVelocity! < 0) {
             // Swipe left
-            _pageController.nextPage(
-              duration: duration,
-              curve: Curves.easeInOut,
-            );
+            _navigateToNextPage();
           }
         },
         child: PageView.builder(
@@ -75,8 +101,33 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                   ),
                 );
               },
-              child: PageContent(content: widget.pages[index]),
+              child: PageContent(content: widget.pages[index], onInteraction: _onInteraction),
             );
+          },
+          onPageChanged: (value) {
+            _showingQuiz = true;
+            if (_hasInteracted){
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return QuizPopup(
+                    pageContent: "hello",
+                    sourceLanguage: "en",
+                    targetLanguage: "sv",
+                    words: _interactedWords,
+                    onQuizComplete: () {
+                      setState(() {
+                        _showingQuiz = false;
+                        _hasInteracted = false;
+                        _interactedWords.clear();
+                      });
+                      Navigator.of(context).pop();
+                      // _navigateToNextPage();
+                    },
+                  );
+                },
+              );
+            }
           },
         ),
       ),
@@ -86,27 +137,18 @@ class _SmoothPageViewState extends State<SmoothPageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              TextButton(onPressed: () {}, child: const Text('Vocab'),),
               Text(
                   'Page ${_currentPage.floor() + 1} of ${widget.pages.length}'),
               Row(
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      _pageController.previousPage(
-                        duration: duration,
-                        curve: Curves.easeInOut,
-                      );
-                    },
+                    onPressed: _navigateToPreviousPage,
                   ),
                   IconButton(
                     icon: const Icon(Icons.arrow_forward),
-                    onPressed: () {
-                      _pageController.nextPage(
-                        duration: duration,
-                        curve: Curves.easeInOut,
-                      );
-                    },
+                    onPressed: _navigateToNextPage,
                   ),
                 ],
               ),
@@ -120,8 +162,9 @@ class _SmoothPageViewState extends State<SmoothPageView> {
 
 class PageContent extends StatefulWidget {
   final String content;
+  final Function onInteraction;
 
-  const PageContent({Key? key, required this.content}) : super(key: key);
+  const PageContent({super.key, required this.content, required this.onInteraction});
 
   @override
   _PageContentState createState() => _PageContentState();
@@ -129,6 +172,8 @@ class PageContent extends StatefulWidget {
 
 class _PageContentState extends State<PageContent> {
   late List<bool> _wordTapped;
+
+  _PageContentState();
 
   @override
   void initState() {
@@ -148,7 +193,7 @@ class _PageContentState extends State<PageContent> {
                 : Colors.white,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(48.0),
             child: SingleChildScrollView(
               child: RichText(
                 text: TextSpan(
@@ -174,29 +219,13 @@ class _PageContentState extends State<PageContent> {
                                 context: context,
                                 isScrollControlled: true,
                                 builder: ((context) {
-                                    return Container(
-                                    height: 300,
-                                    child: const SingleChildScrollView(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(32.0),
-                                        child: 
-                                          Text(
-                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                                            'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                                            'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                                            'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-                                            'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
-                                          ),
-                                        ),
-                                      ),
-                                    );
+                                  return DictionaryEntry(word: word);
                                 }));
                           }
                           setState(() {
                             _wordTapped[index] = !_wordTapped[index];
                           });
+                          widget.onInteraction(word);
                         },
                     );
                   }).toList(),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SettingsModel extends ChangeNotifier {
-  double _fontSize = 20.0;
-  double _lineHeight = 1.5;
+  double _fontSize = 26.0;
+  double _lineHeight = 1.8;
   ThemeMode _themeMode = ThemeMode.system;
 
   double get fontSize => _fontSize;

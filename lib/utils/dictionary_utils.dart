@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-class DictionaryUtils {
+class OxfordDictionaryUtils {
   static final String _baseUrl = dotenv.env['OXFORD_DICTIONARY_BASE_URL']!;
   static final String _appId = dotenv.env['APP_ID']!;
   static final String _appKey = dotenv.env['APP_KEY']!;
