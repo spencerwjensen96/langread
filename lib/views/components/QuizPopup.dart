@@ -135,8 +135,6 @@ $example
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No questions available'));
           } else {
-            // print('Questions: $_questions');
-
             return Scaffold(
                 appBar: AppBar(
                   title: Text('Quiz'),
@@ -144,7 +142,6 @@ $example
                 body: FutureBuilder<List<Map<String, dynamic>>>(
                     future: _questionsFuture,
                     builder: (context, snapshot) {
-                      // List<Map<String, dynamic>> questions = snapshot.data!;
                       var question = _questions[currentQuestionIndex];
                       return Padding(
                         padding: const EdgeInsets.all(48.0),
@@ -155,20 +152,6 @@ $example
                                 originalSentence: question['options'][1],
                                 translatedSentence: question['options'][0],
                                 onQuestionFinish: answerQuestion),
-                            // Text(
-                            //   question['question'],
-                            //   style: TextStyle(
-                            //       fontSize: 20, fontWeight: FontWeight.bold),
-                            // ),
-                            // const SizedBox(height: 20),
-                            // ...question['options'].map((option) => Padding(
-                            //       padding:
-                            //           const EdgeInsets.symmetric(vertical: 8.0),
-                            //       child: ElevatedButton(
-                            //         onPressed: () => answerQuestion(option),
-                            //         child: Text(option),
-                            //       ),
-                            //     )),
                             Expanded(
                                 child: Align(
                                     alignment: Alignment.bottomRight,

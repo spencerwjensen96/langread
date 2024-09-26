@@ -42,7 +42,6 @@ class _SmoothPageViewState extends State<SmoothPageView> {
       _hasInteracted = true;
     });
     _interactedWords.add(word);
-    // print(_interactedWords);
   }
 
   void _navigateToPreviousPage() {
@@ -51,7 +50,6 @@ class _SmoothPageViewState extends State<SmoothPageView> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-      // _interactedWords.clear();
     }
   }
 
@@ -61,7 +59,6 @@ class _SmoothPageViewState extends State<SmoothPageView> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-      // _interactedWords.clear();
     }
   }
 

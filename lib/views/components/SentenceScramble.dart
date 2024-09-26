@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/utils.dart';
 
 class SentenceScramble extends StatefulWidget {
   final String originalSentence;
@@ -23,10 +24,7 @@ class _SentenceScrambleState extends State<SentenceScramble> {
 
   @override
   void initState() {
-    super.initState();
-    print(widget.translatedSentence);
-    print(widget.originalSentence);
-  
+    super.initState();  
     _initializeWords();
   }
 
@@ -159,26 +157,14 @@ class _SentenceScrambleState extends State<SentenceScramble> {
             },
             onWillAcceptWithDetails: (data) => data != "Bad Input",
             onAcceptWithDetails: (data) => _updateUserAnswer(data.data),
-            // onLeave: (data) {
-            //   print("leaving $data");
-            // },
           ),
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: _onSubmit,
-            // userAnswer.length == orderedWords.length ? _onSubmit : null,
             child: Text('Submit'),
           ),
         ],
       ),
     );
   }
-}
-
-bool listEquals<T>(List<T> a, List<T> b) {
-  if (a.length != b.length) return false;
-  for (int i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return false;
-  }
-  return true;
 }

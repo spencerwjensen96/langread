@@ -35,7 +35,7 @@ class SettingsView extends StatelessWidget {
                 value: settings.lineHeight,
                 min: 1.0,
                 max: 2.5,
-                divisions: 10,
+                divisions: 15,
                 label: settings.lineHeight.toString(),
                 onChanged: (value) {
                   settings.setLineHeight(value);
