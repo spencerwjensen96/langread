@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:langread/views/components/SmoothPageView.dart';
-import 'package:langread/views/home_screen.dart';
-import 'package:langread/views/library_view.dart';
 import '../models/settings.dart';
 
 
 class ReadingView extends StatelessWidget {
-var book;
+final book;
 
 ReadingView({super.key, this.book});
 

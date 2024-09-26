@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:langread/views/components/SentenceScramble.dart';
 
 class QuizPopup extends StatefulWidget {
   final String pageContent;
@@ -27,7 +27,6 @@ class QuizPopup extends StatefulWidget {
 class _QuizPopupState extends State<QuizPopup> {
   late Future<List<Map<String, dynamic>>> _questionsFuture;
   late List<Map<String, dynamic>> _questions = [];
-  late bool _showQuiz = false;
   int currentQuestionIndex = 0;
 
   @override
@@ -53,13 +52,18 @@ class _QuizPopupState extends State<QuizPopup> {
 }
 """;
     var prompt = """
-You are a language tutor teaching an $targetLanguage student $sourceLanguage. You are focused on helping learners understand vocabulary through context. When provided with a list of vocabulary words, your task is to create one unique, well-formed sentence for each word. These sentences should clearly demonstrate the meaning and usage of the word in context. Ensure that each sentence:
+You are a language tutor teaching an $targetLanguage student $sourceLanguage. You are focused on helping learners understand vocabulary through context. When provided with a list of vocabulary words, your task is to create one unique, well-formed sentence for each word. These sentences should clearly demonstrate the meaning and usage of the word in context. 
+Ensure that each sentence:
 
 Is grammatically correct.
 Reflects the common or natural usage of the word.
 Avoids repetitive sentence structures across different words.
 Matches the general difficulty level of an intermediate language learner, unless otherwise specified.
 Do not use the vocabulary words in overly complex or obscure contexts; the goal is for the learner to easily grasp the meaning of the word through your sentence.
+Is a simple sentence structure that is easy for a language learner to understand.
+Doesn't exceed 10 words.
+
+Ensure that the word and sentence are the language you are teaching, and the translation is in the language of the student.
 
 Return the the word, sentence, and translation in json format
 Example:
@@ -92,12 +96,8 @@ $example
 
   Future<List<Map<String, dynamic>>> generateQuestions(
       List<String> words, String sourceLanguage, String targetLanguage) async {
-    // This is a placeholder. In a real app, you'd implement more sophisticated
-    // question generation based on the content.
-    // print('$words, $sourceLanguage, $targetLanguage');
     var response =
         await fetchQuizFromChatGPT(words, sourceLanguage, targetLanguage);
-    print("RESPONSE: $response");
     for (var entry in jsonDecode(response)['words']) {
       _questions.add({
         'question': '${entry["word"]}',
@@ -111,18 +111,6 @@ $example
       });
     }
     return _questions;
-    // return [
-    //   {
-    //     'question': 'What is this page about?',
-    //     'options': ['Option A', 'Option B', 'Option C', 'Option D'],
-    //     'correctAnswer': 'Option A',
-    //   },
-    //   {
-    //     'question': 'What is a key concept mentioned in this page?',
-    //     'options': ['Concept 1', 'Concept 2', 'Concept 3', 'Concept 4'],
-    //     'correctAnswer': 'Concept 2',
-    //   },
-    // ];
   }
 
   void answerQuestion(String answer) {
@@ -137,7 +125,6 @@ $example
 
   @override
   Widget build(BuildContext context) {
-    // final question = _questions;
     return FutureBuilder(
         future: _questionsFuture,
         builder: (context, snapshot) {
@@ -152,7 +139,7 @@ $example
 
             return Scaffold(
                 appBar: AppBar(
-                  title:  Text('Quiz'),
+                  title: Text('Quiz'),
                 ),
                 body: FutureBuilder<List<Map<String, dynamic>>>(
                     future: _questionsFuture,
@@ -164,20 +151,24 @@ $example
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              question['question'],
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 20),
-                            ...question['options'].map((option) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: ElevatedButton(
-                                    onPressed: () => answerQuestion(option),
-                                    child: Text(option),
-                                  ),
-                                )),
+                            SentenceScramble(
+                                originalSentence: question['options'][1],
+                                translatedSentence: question['options'][0],
+                                onQuestionFinish: answerQuestion),
+                            // Text(
+                            //   question['question'],
+                            //   style: TextStyle(
+                            //       fontSize: 20, fontWeight: FontWeight.bold),
+                            // ),
+                            // const SizedBox(height: 20),
+                            // ...question['options'].map((option) => Padding(
+                            //       padding:
+                            //           const EdgeInsets.symmetric(vertical: 8.0),
+                            //       child: ElevatedButton(
+                            //         onPressed: () => answerQuestion(option),
+                            //         child: Text(option),
+                            //       ),
+                            //     )),
                             Expanded(
                                 child: Align(
                                     alignment: Alignment.bottomRight,

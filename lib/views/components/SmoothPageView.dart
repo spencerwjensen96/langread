@@ -17,7 +17,6 @@ class SmoothPageView extends StatefulWidget {
 class _SmoothPageViewState extends State<SmoothPageView> {
   late PageController _pageController;
   double _currentPage = 0;
-  bool _showingQuiz = false;
   bool _hasInteracted = false;
   List<String> _interactedWords = <String>[];
 
@@ -105,7 +104,6 @@ class _SmoothPageViewState extends State<SmoothPageView> {
             );
           },
           onPageChanged: (value) {
-            _showingQuiz = true;
             if (_hasInteracted){
               showDialog(
                 context: context,
@@ -117,12 +115,10 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                     words: _interactedWords,
                     onQuizComplete: () {
                       setState(() {
-                        _showingQuiz = false;
                         _hasInteracted = false;
                         _interactedWords.clear();
                       });
                       Navigator.of(context).pop();
-                      // _navigateToNextPage();
                     },
                   );
                 },

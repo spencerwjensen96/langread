@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:langread/utils/dictionary_utils.dart';
 import 'package:deepl_dart/deepl_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class DictionaryEntry extends StatefulWidget {
   final String word;
