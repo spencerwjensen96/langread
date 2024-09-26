@@ -1,16 +1,37 @@
-# langread
+# LangRead
 
-A new Flutter project.
+LangRead is a Flutter application designed to help users improve their language reading skills through interactive exercises and engaging content.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Follow these instructions to get up and running on your local machine.
 
-A few resources to get you started if this is your first Flutter project:
+### Prerequisites
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter SDK: [Install Flutter](https://flutter.dev/docs/get-started/install)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Installation
+
+1. **Clone the repository:**
+
+    ```sh
+    git clone https://github.com/yourusername/LangRead.git
+    cd LangRead
+    ```
+
+3. **Get the Flutter packages:**
+
+    ```sh
+    flutter pub get
+    ```
+
+### Running the App
+
+1. **Connect a device or start an emulator.**
+
+2. **Run the app:**
+
+    ```sh
+    flutter run
+    ```
+
