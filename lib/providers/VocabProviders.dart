@@ -9,6 +9,7 @@ class VocabularyProvider with ChangeNotifier {
   List<VocabularyItemModel> get items => _items;
 
   VocabularyProvider() {
+    print('VocabularyProvider constructor');
     _loadItems();
   }
 
@@ -25,20 +26,15 @@ class VocabularyProvider with ChangeNotifier {
   Future<void> _loadItems() async {
     final file = await _localFile;
     try {
-      // final file = await _localFile;
-      if (await file.exists()) {
+      if (!await file.exists()) {
+        await file.create();
+      }
+      else {
         final String contents = await file.readAsString();
         final List<dynamic> decodedItems = json.decode(contents);
         _items = decodedItems.map((item) => VocabularyItemModel.fromMap(item)).toList();
       }
     } catch (e) {
-      try{
-      if (!await file.exists()) {
-        await file.create();
-      }
-      } catch (e){
-        print('Error creating vocabulary items file: $e');
-      }
       print('Error loading vocabulary items: $e');
     }
     notifyListeners();
@@ -48,6 +44,7 @@ class VocabularyProvider with ChangeNotifier {
     try {
       final file = await _localFile;
       final String itemsJson = json.encode(_items.map((item) => item.toMap()).toList());
+      print(itemsJson);
       await file.writeAsString(itemsJson);
     } catch (e) {
       print('Error saving vocabulary items: $e');

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/book.dart';
@@ -10,22 +12,23 @@ class LibraryView extends StatelessWidget {
         id: 0,
         title: 'Sample Book 1',
         author: 'Author 1',
-        coverUrl: 'https://via.placeholder.com/150'),
+        coverUrl: 'file:///Users/spencer.jensen/Library/Developer/CoreSimulator/Devices/1262FDE7-05FC-4F40-8F94-C1A44F186F2E/data/Containers/Data/Application/E2661582-DE75-4534-9949-211D0101CE83/Documents/150.png'),
     BookModel(
         id: 1,
         title: 'Sample Book 2',
         author: 'Author 2',
-        coverUrl: 'https://via.placeholder.com/150'),
+        coverUrl: 'file:///Users/spencer.jensen/Library/Developer/CoreSimulator/Devices/1262FDE7-05FC-4F40-8F94-C1A44F186F2E/data/Containers/Data/Application/E2661582-DE75-4534-9949-211D0101CE83/Documents/150.png'),
     BookModel(
         id: 2,
         title: 'Brothers Lionheart',
         author: 'Astrid Lindgren',
-        coverUrl: 'https://via.placeholder.com/150'),
+        coverUrl: 'file:///Users/spencer.jensen/Library/Developer/CoreSimulator/Devices/1262FDE7-05FC-4F40-8F94-C1A44F186F2E/data/Containers/Data/Application/E2661582-DE75-4534-9949-211D0101CE83/Documents/150.png'),
     BookModel(
         id: 3,
         title: 'Broderna Lejonhjarta',
         author: 'Astrid Lindgren',
-        coverUrl: 'https://somewhereboy.wordpress.com/wp-content/uploads/2017/09/the-brothers-lionheart.jpg'),
+        coverUrl:
+            'https://somewhereboy.wordpress.com/wp-content/uploads/2017/09/the-brothers-lionheart.jpg'),
   ];
 
   @override
@@ -82,10 +85,15 @@ class BookCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Image.network(
-                book.coverUrl,
-                fit: BoxFit.cover,
-              ),
+              child: book.coverUrl.startsWith('file://')
+                  ? Image.file(
+                      File(book.coverUrl.replaceFirst(RegExp(r'file://'), '')),
+                      fit: BoxFit.cover,
+                    )
+                  : Image.network(
+                      book.coverUrl,
+                      fit: BoxFit.cover,
+                    ),
             ),
             const SizedBox(height: 8),
             Text(

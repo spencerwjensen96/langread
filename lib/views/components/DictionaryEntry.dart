@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:deepl_dart/deepl_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:langread/models/vocabulary_item.dart';
+import 'package:langread/providers/VocabProviders.dart';
+import 'package:provider/provider.dart';
 
 class DictionaryEntry extends StatefulWidget {
   final String word;
@@ -37,8 +40,11 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
   }
 
   Future<String> fetchTranslation(String word) async {
-    final result =
-        await translator.translateTextSingular(word, 'en', sourceLang: 'sv',);
+    final result = await translator.translateTextSingular(
+      word,
+      'en',
+      sourceLang: 'sv',
+    );
     return result.text;
   }
 
@@ -48,12 +54,16 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
 
   Future<List<String>> fetchExamples(String word) async {
     // Implement example fetching logic here
-    return ['TODO: Implement examples', 'Example 1 with $word', 'Example 2 with $word'];
+    return [
+      'TODO: Implement examples',
+      'Example 1 with $word',
+      'Example 2 with $word'
+    ];
   }
 
   Future<List<String>> fetchSynonyms(String word) async {
     // Implement synonym fetching logic here
-    return ['TODO: Implement synonyms','Synonym 1', 'Synonym 2'];
+    return ['TODO: Implement synonyms', 'Synonym 1', 'Synonym 2'];
   }
 
   @override
@@ -84,8 +94,8 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
                   children: [
                     Text(
                       widget.word,
-                      style:
-                          const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     _buildSection('Translation', wordInfo['translation']),
@@ -94,8 +104,13 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
                     // _buildListSection('Synonyms', wordInfo['synonyms']),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () {
-                        // Implement save to vocabulary list functionality
+                      onPressed: () async {
+                        print('pressed add vocab button');
+                        await Provider.of<VocabularyProvider>(context, listen: false).addItem(VocabularyItemModel(
+                            word: widget.word,
+                            translation: wordInfo['translation'],
+                            sentence: "example sentence",
+                            dateAdded: DateTime.now()));
                       },
                       icon: const Icon(Icons.add),
                       label: const Text('Add to Vocabulary List'),
@@ -114,7 +129,10 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 8),
         Text(content),
         const SizedBox(height: 16),
@@ -126,7 +144,10 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 8),
         ...items.map((item) => Padding(
               padding: const EdgeInsets.only(left: 16, bottom: 4),

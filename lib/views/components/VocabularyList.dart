@@ -1,30 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart';
-// import 'package:langread/providers/VocabProviders.dart';
-
-// class VocabularyList extends StatefulWidget {
-//   const VocabularyList({super.key});
-
-//   @override
-//   State<StatefulWidget> createState() => _VocabularyListState();
-// }
-
-// class _VocabularyListState extends State<VocabularyList> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: Text('Vocabulary List'),
-//         ),
-//         body: ListView(padding: EdgeInsets.all(16), children: [
-//           for (var i in VocabularyProvider().items)
-//             ListTile(
-//               title: Text('Word ${i.word}'),
-//               subtitle: Text('Definition ${i.translation}'),
-//             ),
-//         ]));
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/VocabProviders.dart';
@@ -110,6 +83,14 @@ class VocabularyList extends StatelessWidget {
                           ],
                         ),
                         actions: [
+                          TextButton(
+                            style: TextButton.styleFrom(foregroundColor: Colors.red),
+                            child: Text('Delete Word'),
+                            onPressed: () => {
+                                vocabularyProvider.removeItem(item),
+                                Navigator.of(context).pop(),
+                              }
+                          ),
                           TextButton(
                             child: Text('Close'),
                             onPressed: () => Navigator.of(context).pop(),
