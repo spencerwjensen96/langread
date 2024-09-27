@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/book.dart';
-import '../models/settings.dart';
+import '../providers/SettingsProvider.dart';
 import 'reading_view.dart';
 
 class LibraryView extends StatelessWidget {
@@ -33,7 +33,7 @@ class LibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(builder: (context, settings, child) {
+    return Consumer<SettingsProvider>(builder: (context, settings, child) {
       return Scaffold(
         appBar: AppBar(
           title: Text('Library',
@@ -71,7 +71,7 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(builder: (context, settings, child) {
+    return Consumer<SettingsProvider>(builder: (context, settings, child) {
       return GestureDetector(
         onTap: () {
           Navigator.push(

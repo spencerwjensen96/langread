@@ -6,6 +6,7 @@ import 'library_view.dart';
 import 'reading_view.dart';
 import 'settings_view.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
 
   int selectedIndex;

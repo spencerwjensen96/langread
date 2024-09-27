@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/VocabProviders.dart';
-import '../../models/vocabulary_item.dart';
 
 class VocabularyList extends StatelessWidget {
   @override
@@ -59,9 +58,6 @@ class VocabularyList extends StatelessWidget {
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) async {
                   await vocabularyProvider.removeItem(item);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${item.word} removed from vocabulary')),
-                  );
                 },
                 child: ListTile(
                   title: Text(item.word),

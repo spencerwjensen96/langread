@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:langread/views/components/DictionaryEntry.dart';
 import 'package:langread/views/components/QuizPopup.dart';
 import 'package:provider/provider.dart';
-import '../../models/settings.dart';
+import '../../providers/SettingsProvider.dart';
 
 class SmoothPageView extends StatefulWidget {
   final List<String> pages;
@@ -181,7 +181,7 @@ class _PageContentState extends State<PageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(
+    return Consumer<SettingsProvider>(
       builder: (context, settings, child) {
         final words = widget.content.split(' ');
         return Container(

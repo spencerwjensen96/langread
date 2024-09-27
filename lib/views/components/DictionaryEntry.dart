@@ -111,6 +111,7 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
                             translation: wordInfo['translation'],
                             sentence: "example sentence",
                             dateAdded: DateTime.now()));
+                        
                       },
                       icon: const Icon(Icons.add),
                       label: const Text('Add to Vocabulary List'),

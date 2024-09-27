@@ -9,7 +9,6 @@ class VocabularyProvider with ChangeNotifier {
   List<VocabularyItemModel> get items => _items;
 
   VocabularyProvider() {
-    print('VocabularyProvider constructor');
     _loadItems();
   }
 

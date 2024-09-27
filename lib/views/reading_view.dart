@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:langread/views/components/SmoothPageView.dart';
-import '../models/settings.dart';
+import '../providers/SettingsProvider.dart';
 
 
 class ReadingView extends StatelessWidget {
@@ -36,7 +36,7 @@ final Map<int, List<String>> samplePages = {
 
 @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(
+    return Consumer<SettingsProvider>(
         builder: (context, settings, child) {
     return Scaffold(
       appBar: AppBar(
