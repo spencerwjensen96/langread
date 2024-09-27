@@ -45,7 +45,7 @@ final Map<int, List<String>> samplePages = {
           IconButton(
             icon: Icon(Icons.home),
             onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil('/', (Route route) => false);
+              Navigator.of(context).pushNamed('/home');
             }
           )
         ],

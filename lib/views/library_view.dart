@@ -5,23 +5,23 @@ import '../models/settings.dart';
 import 'reading_view.dart';
 
 class LibraryView extends StatelessWidget {
-  final List<Book> books = [
-    Book(
+  final List<BookModel> books = [
+    BookModel(
         id: 0,
         title: 'Sample Book 1',
         author: 'Author 1',
         coverUrl: 'https://via.placeholder.com/150'),
-    Book(
+    BookModel(
         id: 1,
         title: 'Sample Book 2',
         author: 'Author 2',
         coverUrl: 'https://via.placeholder.com/150'),
-    Book(
+    BookModel(
         id: 2,
         title: 'Brothers Lionheart',
         author: 'Astrid Lindgren',
         coverUrl: 'https://via.placeholder.com/150'),
-    Book(
+    BookModel(
         id: 3,
         title: 'Broderna Lejonhjarta',
         author: 'Astrid Lindgren',
@@ -62,7 +62,7 @@ class LibraryView extends StatelessWidget {
 }
 
 class BookCard extends StatelessWidget {
-  final Book book;
+  final BookModel book;
 
   const BookCard({super.key, required this.book});
 

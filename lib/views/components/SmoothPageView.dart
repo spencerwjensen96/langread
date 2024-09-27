@@ -130,7 +130,12 @@ class _SmoothPageViewState extends State<SmoothPageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(onPressed: () {}, child: const Text('Vocab'),),
+                TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/vocabulary');
+                },
+                child: const Text('Vocab'),
+                ),
               Text(
                   'Page ${_currentPage.floor() + 1} of ${widget.pages.length}'),
               Row(

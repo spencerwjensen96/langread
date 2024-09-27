@@ -47,6 +47,15 @@ class AppTheme {
         ),
       ),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.grey[800],
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    ),
     cardTheme: CardTheme(
       elevation: 2,
       shape: RoundedRectangleBorder(
