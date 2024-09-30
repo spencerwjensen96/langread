@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:langread/server/pocketbase.dart';
-import '../server/pocketbase.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

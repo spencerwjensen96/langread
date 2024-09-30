@@ -1,6 +1,7 @@
 // lib/views/home_screen.dart
 import 'package:flutter/material.dart';
-import 'package:langread/models/book.dart';
+// import 'package:langread/models/book.dart';
+import 'package:langread/server/models/book.dart';
 import 'package:langread/views/vocab_view.dart';
 import 'library_view.dart';
 import 'reading_view.dart';
@@ -21,9 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
   // int _selectedIndex = widget.selectedIndex;
   bool _isReading = false;
   
-  static BookModel lastReadBook = BookModel(
-      id: 0,
+  static LibraryBook lastReadBook = LibraryBook(
+      id: '0',
       title: 'Sample Book 1',
+      description: '',
+        genre: '',
+        dateAdded: DateTime.now(),
       author: 'Author 1',
       coverUrl: 'https://via.placeholder.com/150');
 

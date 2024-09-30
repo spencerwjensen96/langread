@@ -13,7 +13,6 @@ import 'package:langread/views/settings_view.dart';
 import 'package:nock/nock.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:langread/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setUpAll(nock.init);

@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/user.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:flutter/foundation.dart';
@@ -31,7 +32,8 @@ class PocketBaseService {
         'password': password,
         'passwordConfirm': password,
       });
-      //_authToken = user.token;
+
+      _authToken = user.data['token'];
       return true;
     } catch (e) {
       debugPrint('Error during sign up: $e');
@@ -55,41 +57,7 @@ class PocketBaseService {
     _authToken = null;
   }
 
-  Future<List<Map<String, dynamic>>> getVocabularyItems() async {
-    try {
-      final result = await _pb.collection('vocabulary').getList(
-        filter: 'user = "${_pb.authStore.model.id}"',
-        sort: '-created',
-      );
-      return result.items.map((item) => item.toJson()).toList();
-    } catch (e) {
-      debugPrint('Error fetching vocabulary items: $e');
-      return [];
-    }
-  }
-
-  // Future<bool> addVocabularyItem(Map<String, dynamic> item) async {
-  //   try {
-  //     await _pb.collection('vocabulary').create(body: {
-  //       ...item,
-  //       'user': _pb.authStore.model.id,
-  //     });
-  //     return true;
-  //   } catch (e) {
-  //     debugPrint('Error adding vocabulary item: $e');
-  //     return false;
-  //   }
-  // }
-
-  // Future<bool> deleteVocabularyItem(String itemId) async {
-  //   try {
-  //     await _pb.collection('vocabulary').delete(itemId);
-  //     return true;
-  //   } catch (e) {
-  //     debugPrint('Error deleting vocabulary item: $e');
-  //     return false;
-  //   }
-  // }
+  BooksPocketbase get booksPb => BooksPocketbase(_pb);
 
   bool get isAuthenticated => _pb.authStore.isValid;
 
