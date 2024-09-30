@@ -23,14 +23,9 @@ void main() async {
         ChangeNotifierProvider(
       create: (context) => SettingsProvider(prefsWithCache),)
       ],
-      child: MyApp(prefsWithCache)));
+      child: MyApp()));
 }
 class MyApp extends StatelessWidget {
-  late final prefs;
-  MyApp(SharedPreferencesWithCache prefsWithCache){
-    prefs = prefsWithCache;
-  }
-
   @override
   Widget build(BuildContext context) {
     return  
@@ -38,7 +33,7 @@ class MyApp extends StatelessWidget {
           title: 'LangRead',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: SettingsProvider.getMode(prefs.getString('themeMode')),
+          themeMode: Provider.of<SettingsProvider>(context).themeMode,
           home: HomeScreen(selectedIndex: 0,),
           initialRoute: '/login',
           routes: {

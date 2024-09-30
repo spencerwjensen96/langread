@@ -23,9 +23,8 @@ void main() {
   });
 
   testWidgets('Titles are properly rendered', (WidgetTester tester) async {
-    SharedPreferencesWithCache prefs = await SharedPreferencesWithCache.create(cacheOptions: SharedPreferencesWithCacheOptions(allowList: <String>{'themeMode', 'fontSize', 'lineHeight'}));
 
-    await mockNetworkImages(() async => tester.pumpWidget(MyApp(prefs)));
+    await mockNetworkImages(() async => tester.pumpWidget(MyApp()));
 
     expect(find.byType(LibraryView), findsOne);
     expect(find.byType(ReadingView), findsNothing);

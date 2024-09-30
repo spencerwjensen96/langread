@@ -12,8 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('App renders', (WidgetTester tester) async {
-    SharedPreferencesWithCache prefs = await SharedPreferencesWithCache.create(cacheOptions: SharedPreferencesWithCacheOptions(allowList: <String>{'themeMode', 'fontSize', 'lineHeight'}));
-    await mockNetworkImages(() async => await tester.pumpWidget(MyApp(prefs)));
+    await mockNetworkImages(() async => await tester.pumpWidget(MyApp()));
 
     expect(find.byType(MyApp), findsOne);
 
