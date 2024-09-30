@@ -5,6 +5,7 @@ import 'package:langread/views/login_screen.dart';
 import 'package:langread/views/signup_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'views/home_screen.dart';
 import 'providers/SettingsProvider.dart';
@@ -13,25 +14,31 @@ import 'config/ThemeData.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   await PocketBaseService().initialize();
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
+  SharedPreferencesWithCache prefsWithCache = await initalizeSharedPreferences();
+
+  runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => VocabularyProvider()),
         ChangeNotifierProvider(
-      create: (context) => SettingsProvider(),)
+      create: (context) => SettingsProvider(prefsWithCache),)
       ],
-      child: Consumer<SettingsProvider>(
-      builder: (context, settings, child) {
-        return MaterialApp(
+      child: MyApp(prefsWithCache)));
+}
+class MyApp extends StatelessWidget {
+  late final prefs;
+  MyApp(SharedPreferencesWithCache prefsWithCache){
+    prefs = prefsWithCache;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return  
+        MaterialApp(
           title: 'LangRead',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: settings.themeMode,
+          themeMode: SettingsProvider.getMode(prefs.getString('themeMode')),
           home: HomeScreen(selectedIndex: 0,),
           initialRoute: '/login',
           routes: {
@@ -44,8 +51,5 @@ class MyApp extends StatelessWidget {
             '/settings': (context) => HomeScreen(selectedIndex: 3,),
           },
         );
-      }
-    ),
-    );
   }
 }

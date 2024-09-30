@@ -1,29 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsProvider extends ChangeNotifier {
-  double _fontSize = 26.0;
-  double _lineHeight = 2;
-  ThemeMode _themeMode = ThemeMode.system;
+Future<SharedPreferencesWithCache> initalizeSharedPreferences() async {
+   final SharedPreferencesWithCache prefsWithCache =
+      await SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(
+      allowList: <String>{'themeMode', 'fontSize', 'lineHeight'},
+    ),
+  );
+  prefsWithCache.setString('themeMode', 'system');
+  prefsWithCache.setDouble('fontSize', 26.0);
+  prefsWithCache.setDouble('lineHeight', 2.0);
+  return prefsWithCache;
+}
 
-  double get fontSize => _fontSize;
-  double get subfontSize => _fontSize - 4;
-  double get superfontSize => _fontSize + 4;
-  double get lineHeight => _lineHeight;
+class SettingsProvider extends ChangeNotifier{
+  late final prefs;
 
-  ThemeMode get themeMode => _themeMode;
+  SettingsProvider(SharedPreferencesWithCache prefsWithCache){
+    prefs = prefsWithCache;
+  }
 
-  void setFontSize(double size) {
-    _fontSize = size;
+  double get fontSize => prefs.getDouble('fontSize');
+  double get subfontSize => prefs.getDouble('fontSize') - 4;
+  double get superfontSize => prefs.getDouble('fontSize') + 4;
+  double get lineHeight => prefs.getDouble('lineHeight');
+
+  ThemeMode get themeMode => getMode(prefs.getString('themeMode'));
+
+  void setFontSize(double size) async {
+    // _fontSize = size;
+    await prefs.setDouble('fontSize', size);
     notifyListeners();
   }
 
-  void setLineHeight(double height) {
-    _lineHeight = height;
+  void setLineHeight(double height) async {
+    // _lineHeight = height;
+    await prefs.setDouble('lineHeight', height);
     notifyListeners();
   }
 
-  void setThemeMode(ThemeMode mode) {
-    _themeMode = mode;
+  void setThemeMode(ThemeMode mode) async {
+    // _themeMode = mode;
+    await prefs.setString('themeMode', mode.toString().split('.').last);
     notifyListeners();
+  }
+
+  static ThemeMode getMode(String mode){
+    switch (mode){
+      case 'system': return ThemeMode.system;
+      case 'light': return ThemeMode.light;
+      case 'dark': return ThemeMode.dark;
+      default: return ThemeMode.system;
+    }
   }
 }

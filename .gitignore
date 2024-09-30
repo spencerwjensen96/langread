@@ -24,6 +24,8 @@ migrate_working_dir/
 
 backend/pb_data/
 
+devtools_options.yaml
+
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id

@@ -8,10 +8,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:langread/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('App renders', (WidgetTester tester) async {
-    await mockNetworkImages(() async => await tester.pumpWidget(MyApp()));
+    SharedPreferencesWithCache prefs = await SharedPreferencesWithCache.create(cacheOptions: SharedPreferencesWithCacheOptions(allowList: <String>{'themeMode', 'fontSize', 'lineHeight'}));
+    await mockNetworkImages(() async => await tester.pumpWidget(MyApp(prefs)));
 
     expect(find.byType(MyApp), findsOne);
 

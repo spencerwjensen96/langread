@@ -33,11 +33,10 @@ class LibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsProvider>(builder: (context, settings, child) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Library',
-              style: TextStyle(fontSize: settings.superfontSize)),
+          title: Text('My Library',
+              style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).superfontSize)),
         ),
         body: GridView.builder(
           padding: const EdgeInsets.all(16),
@@ -60,7 +59,6 @@ class LibraryView extends StatelessWidget {
           child: const Icon(Icons.add),
         ),
       );
-    });
   }
 }
 
@@ -71,7 +69,6 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsProvider>(builder: (context, settings, child) {
       return GestureDetector(
         onTap: () {
           Navigator.push(
@@ -99,19 +96,18 @@ class BookCard extends StatelessWidget {
             Text(
               book.title,
               style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: settings.fontSize),
+                  fontWeight: FontWeight.bold, fontSize: Provider.of<SettingsProvider>(context, listen: false).fontSize),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               book.author,
-              style: TextStyle(fontSize: settings.fontSize - 4),
+              style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).subfontSize),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
       );
-    });
   }
 }

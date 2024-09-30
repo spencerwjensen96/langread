@@ -68,28 +68,28 @@ class PocketBaseService {
     }
   }
 
-  Future<bool> addVocabularyItem(Map<String, dynamic> item) async {
-    try {
-      await _pb.collection('vocabulary').create(body: {
-        ...item,
-        'user': _pb.authStore.model.id,
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Error adding vocabulary item: $e');
-      return false;
-    }
-  }
+  // Future<bool> addVocabularyItem(Map<String, dynamic> item) async {
+  //   try {
+  //     await _pb.collection('vocabulary').create(body: {
+  //       ...item,
+  //       'user': _pb.authStore.model.id,
+  //     });
+  //     return true;
+  //   } catch (e) {
+  //     debugPrint('Error adding vocabulary item: $e');
+  //     return false;
+  //   }
+  // }
 
-  Future<bool> deleteVocabularyItem(String itemId) async {
-    try {
-      await _pb.collection('vocabulary').delete(itemId);
-      return true;
-    } catch (e) {
-      debugPrint('Error deleting vocabulary item: $e');
-      return false;
-    }
-  }
+  // Future<bool> deleteVocabularyItem(String itemId) async {
+  //   try {
+  //     await _pb.collection('vocabulary').delete(itemId);
+  //     return true;
+  //   } catch (e) {
+  //     debugPrint('Error deleting vocabulary item: $e');
+  //     return false;
+  //   }
+  // }
 
   bool get isAuthenticated => _pb.authStore.isValid;
 

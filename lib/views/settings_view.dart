@@ -47,14 +47,15 @@ class _SettingsViewState extends State<SettingsView> {
                         Expanded(
                           child: TextField(
                             controller: _usernameController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'New Username',
                               border: OutlineInputBorder(),
                             ),
+                            // style: TextStyle(fontSize: Provider.of<SettingsProvider>(context).fontSize),
                           ),
                         ),
                         SizedBox(width: 8),
-                        ElevatedButton(
+                        TextButton(
                           onPressed: () {
                             // TODO: Implement username change
                           },
@@ -81,7 +82,8 @@ class _SettingsViewState extends State<SettingsView> {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: Provider.of<SettingsProvider>(context).superfontSize,
+              fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
             ...children,
@@ -93,20 +95,22 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
+
+    var settings = context.watch<SettingsProvider>();
+  //   return Consumer<SettingsProvider>(
+  // builder: (context, settings, child) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
-      body: Consumer<SettingsProvider>(
-        builder: (context, settings, child) {
-          return ListView(
+      body: ListView(
             padding: EdgeInsets.all(16),
             children: [
               _buildSettingSection(
                 'Reading Settings',
                 [
                   ListTile(
-                    title: Text('Font Size'),
+                    title: Text('Font Size', style: TextStyle(fontSize: settings.fontSize)),
                     subtitle: Slider(
                       value: settings.fontSize,
                       min: 10,
@@ -119,7 +123,7 @@ class _SettingsViewState extends State<SettingsView> {
                     ),
                   ),
                   ListTile(
-                    title: Text('Line Height'),
+                    title: Text('Line Height', style: TextStyle(fontSize: settings.fontSize)),
                     subtitle: Slider(
                       value: settings.lineHeight,
                       min: 1.0,
@@ -137,16 +141,16 @@ class _SettingsViewState extends State<SettingsView> {
                 'Appearance',
                 [
                   ListTile(
-                    title: Text('Theme'),
+                    title: Text('Theme', style: TextStyle(fontSize: settings.fontSize)),
                     trailing: DropdownButton<ThemeMode>(
                       value: settings.themeMode,
                       onChanged: (ThemeMode? value) {
                         if (value != null) settings.setThemeMode(value);
                       },
                       items: [
-                        DropdownMenuItem(value: ThemeMode.system, child: Text('System')),
-                        DropdownMenuItem(value: ThemeMode.light, child: Text('Light')),
-                        DropdownMenuItem(value: ThemeMode.dark, child: Text('Dark')),
+                        DropdownMenuItem(value: ThemeMode.system, child: Text('System', style: TextStyle(fontSize: settings.fontSize))),
+                        DropdownMenuItem(value: ThemeMode.light, child: Text('Light', style: TextStyle(fontSize: settings.fontSize))),
+                        DropdownMenuItem(value: ThemeMode.dark, child: Text('Dark', style: TextStyle(fontSize: settings.fontSize))),
                       ],
                     ),
                   ),
@@ -156,45 +160,45 @@ class _SettingsViewState extends State<SettingsView> {
                 'Account',
                 [
                   ListTile(
-                    title: Text('Account Settings'),
+                    title: Text('Account Settings', style: TextStyle(fontSize: settings.fontSize)),
                     trailing: Icon(_showAccountSettings ? Icons.expand_less : Icons.expand_more),
                     onTap: _toggleShowAccountSettings,
                   ),
                   if (_showAccountSettings) ...[
                     ListTile(
-                      title: Text('Email'),
-                      subtitle: Text(_pbService.user?.email ?? 'Not available'),
+                      title: Text('Email', style: TextStyle(fontSize: settings.fontSize)),
+                      subtitle: Text(_pbService.user?.email ?? 'Not available', style: TextStyle(fontSize: settings.subfontSize)),
                     ),
                     ListTile(
-                      title: Text('Username'),
-                      subtitle: Text(_pbService.user?.username ?? 'Not available'),
+                      title: Text('Username', style: TextStyle(fontSize: settings.fontSize)),
+                      subtitle: Text(_pbService.user?.username ?? 'Not available', style: TextStyle(fontSize: settings.subfontSize)),
                     ),
                     AnimatedSwitcher(duration: Duration(seconds: 1), child: _usernameField),
                     
                     
 
-                    SizedBox(height: 16),
+                    SizedBox(height: 8),
                     OutlinedButton(
                       onPressed: () {
                         // TODO: Implement password change
                       },
-                      child: Text('Change Password'),
+                      child: Text('Change Password', style: TextStyle(fontSize: settings.fontSize)),
                     ),
                     SizedBox(height: 8),
                     OutlinedButton(
                       onPressed: () {
                         // TODO: Implement email change
                       },
-                      child: Text('Change Email'),
+                      child: Text('Change Email', style: TextStyle(fontSize: settings.fontSize)),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () {
                         _pbService.signOut();
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           '/login', (Route<dynamic> route) => false);
                       },
-                      child: Text('Logout'),
+                      child: Text('Logout', style: TextStyle(fontSize: settings.fontSize)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
@@ -204,9 +208,9 @@ class _SettingsViewState extends State<SettingsView> {
                 ],
               ),
             ],
-          );
-        },
-      ),
+          ),
+  //     );
+  // }
     );
   }
 }

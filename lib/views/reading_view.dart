@@ -36,11 +36,9 @@ final Map<int, List<String>> samplePages = {
 
 @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsProvider>(
-        builder: (context, settings, child) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(book.title, style: TextStyle(fontSize: settings.superfontSize)),
+        title: Text(book.title, style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).superfontSize)),
         actions: [
           IconButton(
             icon: Icon(Icons.home),
@@ -52,6 +50,5 @@ final Map<int, List<String>> samplePages = {
       ),
       body: SmoothPageView(pages: samplePages[book.id]!),
     );
-        });
   }
 }

@@ -1,26 +1,5 @@
 import 'package:flutter/material.dart';
 
-// class AppTheme {
-//   static ThemeData lightTheme = ThemeData(
-//     primarySwatch: Colors.blue,
-//     brightness: Brightness.light,
-//     primaryColor: Colors.blue,
-//     primaryColorLight: Colors.blueAccent,
-//     visualDensity: VisualDensity.adaptivePlatformDensity,
-//     appBarTheme: const AppBarTheme(
-//       color: Colors.grey,
-//     ),
-//   );
-
-//   static ThemeData darkTheme = ThemeData(
-//     brightness: Brightness.dark,
-//     primaryColor: Colors.grey[900],
-//     primaryColorDark: Colors.blueAccent,
-//     appBarTheme: AppBarTheme(
-//       color: Colors.grey[900],
-//     ),
-//   );
-// }
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     useMaterial3: true,
@@ -29,7 +8,6 @@ class AppTheme {
       seedColor: Colors.blue,
       brightness: Brightness.light,
     ),
-    // textTheme: GoogleFonts.rubikTextTheme(ThemeData.light().textTheme),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
@@ -78,7 +56,6 @@ class AppTheme {
       seedColor: Colors.blue,
       brightness: Brightness.dark,
     ),
-    // textTheme: GoogleFonts.rubikTextTheme(ThemeData.dark().textTheme),
     appBarTheme: AppBarTheme(
       elevation: 0,
       centerTitle: true,

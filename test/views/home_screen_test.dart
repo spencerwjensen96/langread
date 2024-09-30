@@ -13,6 +13,7 @@ import 'package:langread/views/settings_view.dart';
 import 'package:nock/nock.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:langread/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setUpAll(nock.init);
@@ -22,7 +23,9 @@ void main() {
   });
 
   testWidgets('Titles are properly rendered', (WidgetTester tester) async {
-    await mockNetworkImages(() async => tester.pumpWidget(MyApp()));
+    SharedPreferencesWithCache prefs = await SharedPreferencesWithCache.create(cacheOptions: SharedPreferencesWithCacheOptions(allowList: <String>{'themeMode', 'fontSize', 'lineHeight'}));
+
+    await mockNetworkImages(() async => tester.pumpWidget(MyApp(prefs)));
 
     expect(find.byType(LibraryView), findsOne);
     expect(find.byType(ReadingView), findsNothing);

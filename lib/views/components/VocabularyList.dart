@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:langread/providers/SettingsProvider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/VocabProviders.dart';
 
@@ -60,8 +61,8 @@ class VocabularyList extends StatelessWidget {
                   await vocabularyProvider.removeItem(item);
                 },
                 child: ListTile(
-                  title: Text(item.word),
-                  subtitle: Text(item.translation),
+                  title: Text(item.word, style: TextStyle(fontSize: Provider.of<SettingsProvider>(context).fontSize)),
+                  subtitle: Text(item.translation, style: TextStyle(fontSize: Provider.of<SettingsProvider>(context).subfontSize)),
                   onTap: () {
                     showDialog(
                       context: context,
