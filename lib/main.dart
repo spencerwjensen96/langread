@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           title: 'LangRead',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: Provider.of<SettingsProvider>(context).themeMode,
+          themeMode: Provider.of<SettingsProvider>(context, listen: false).themeMode,
           //home: HomeScreen(selectedIndex: 0,),
           initialRoute: '/login',
           routes: {

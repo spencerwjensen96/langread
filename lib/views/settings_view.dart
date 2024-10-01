@@ -82,7 +82,7 @@ class _SettingsViewState extends State<SettingsView> {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: Provider.of<SettingsProvider>(context).superfontSize,
+              style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).superfontSize,
               fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
