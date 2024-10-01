@@ -12,15 +12,15 @@ class BookCard extends StatelessWidget {
   
   final Function(BuildContext, LibraryBook)? onTap;
 
-  void Function(BuildContext, LibraryBook) _defaultOnTap(BuildContext context, LibraryBook book) {
-    return (context, book) { 
+  void _defaultOnTap(BuildContext context, LibraryBook book) {
+    print('Tapped on book: ${book.title}');
+    print(book);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ReadingView(book: book),
         ),
       );
-    };
   }
   
   BookCard({super.key, required this.book, this.onTap});
@@ -29,7 +29,7 @@ class BookCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        onTap != null ? onTap!(context, book) : _defaultOnTap(context, book)(context, book);
+        onTap != null ? onTap!(context, book) : _defaultOnTap(context, book);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

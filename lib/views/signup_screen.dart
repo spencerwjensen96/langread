@@ -19,12 +19,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (password == confirmPassword && await _pbService.signUp(email, password)) {
       // Navigate to the main screen or show success message
-      Navigator.of(context).pushNamed('/home');
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     } else {
-      // Show error message
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text('Login failed. Please try again.')),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Signup failed. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -61,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/login');
+                Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
               },
               child: Text('Login'),
             ),

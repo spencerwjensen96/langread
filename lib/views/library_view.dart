@@ -18,7 +18,7 @@ class LibraryView extends StatelessWidget {
         dateAdded: DateTime.now(),
         author: 'Author 1',
         coverUrl:
-            'file:///Users/spencer.jensen/Library/Developer/CoreSimulator/Devices/1262FDE7-05FC-4F40-8F94-C1A44F186F2E/data/Containers/Data/Application/E2661582-DE75-4534-9949-211D0101CE83/Documents/150.png'),
+            'https://via.placeholder.com/150'),
     LibraryBook(
         id: '1',
         title: 'Sample Book 2',
@@ -27,7 +27,7 @@ class LibraryView extends StatelessWidget {
         dateAdded: DateTime.now(),
         author: 'Author 2',
         coverUrl:
-            'file:///Users/spencer.jensen/Library/Developer/CoreSimulator/Devices/1262FDE7-05FC-4F40-8F94-C1A44F186F2E/data/Containers/Data/Application/E2661582-DE75-4534-9949-211D0101CE83/Documents/150.png'),
+            'https://via.placeholder.com/150'),
     LibraryBook(
         id: '2',
         title: 'Brothers Lionheart',
@@ -36,7 +36,7 @@ class LibraryView extends StatelessWidget {
         dateAdded: DateTime.now(),
         author: 'Astrid Lindgren',
         coverUrl:
-            'file:///Users/spencer.jensen/Library/Developer/CoreSimulator/Devices/1262FDE7-05FC-4F40-8F94-C1A44F186F2E/data/Containers/Data/Application/E2661582-DE75-4534-9949-211D0101CE83/Documents/150.png'),
+            'https://via.placeholder.com/150'),
     LibraryBook(
         id: '3',
         title: 'Broderna Lejonhjarta',
