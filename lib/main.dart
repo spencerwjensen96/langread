@@ -16,9 +16,10 @@ import 'config/ThemeData.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  await PocketBaseService().initialize();
-
   SharedPreferencesWithCache prefsWithCache = await initalizeSharedPreferences();
+  // PocketBaseService();
+  PocketBaseService().initialize(prefsWithCache);
+  print(prefsWithCache.keys);
 
   runApp(MultiProvider(
       providers: [
@@ -29,6 +30,7 @@ void main() async {
       child: MyApp()));
 }
 class MyApp extends StatelessWidget {
+  PocketBaseService pbService = PocketBaseService();
   @override
   Widget build(BuildContext context) {
     return  
@@ -40,8 +42,26 @@ class MyApp extends StatelessWidget {
           //home: HomeScreen(selectedIndex: 0,),
           initialRoute: '/login',
           routes: {
-            '/login': (context) => LoginScreen(),
-            '/signup': (context) => SignupScreen(),
+            '/login': (context) {
+              if (pbService.isAuthenticated) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+                });
+                return Container(); // Return an empty container while navigating
+              } else {
+                return LoginScreen();
+              }
+            },
+            '/signup': (context) {
+              if (pbService.isAuthenticated) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+                });
+                return Container(); // Return an empty container while navigating
+              } else {
+                return SignupScreen();
+              }
+            },
             '/home': (context) => HomeScreen(selectedIndex: 0,),
             '/library': (context) => HomeScreen(selectedIndex: 0,),
             '/reading': (context) => HomeScreen(selectedIndex: 1,),

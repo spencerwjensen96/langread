@@ -17,7 +17,7 @@ class _SignupScreenState extends State<SignupScreen> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-    if (password == confirmPassword && await _pbService.signUp(email, password)) {
+    if (password == confirmPassword && await _pbService.auth.signUp(email, password)) {
       // Navigate to the main screen or show success message
       Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     } else {

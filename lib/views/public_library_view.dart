@@ -6,7 +6,7 @@ import 'package:langread/views/components/BookCard.dart';
 
 class PublicLibraryScreen extends StatelessWidget {
 
-  BooksPocketbase booksService = PocketBaseService().booksPb;
+  BooksPocketbase booksService = PocketBaseService().books;
 
   // late List<Book> books;
 

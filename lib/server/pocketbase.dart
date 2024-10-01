@@ -1,65 +1,59 @@
+import 'dart:convert';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:langread/providers/SettingsProvider.dart';
+import 'package:langread/server/methods/auth.dart';
 import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/user.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PocketBaseService {
   static final PocketBaseService _instance = PocketBaseService._internal();
   late final PocketBase _pb;
-  String? _authToken;
+
+  // late final SharedPreferencesWithCache prefs;
+
   User? get user => User(_pb.authStore.model);
+  bool get isAuthenticated => _pb.authStore.isValid;
+  String? get authToken => auth.authToken;
 
   factory PocketBaseService() {
     return _instance;
   }
 
   PocketBaseService._internal() {
-    _pb = PocketBase(dotenv.env['POCKETBASE_URL']!);
-    // Initialize any other variables or settings here
+
   }
 
-  Future<void> initialize() async {
+  void initialize(SharedPreferencesWithCache prefsWithCache) {
     // Perform any initialization tasks here
     // For example, you might want to check for an existing auth token in secure storage
     // and authenticate the user automatically if it exists
-  }
+    final store = AsyncAuthStore(
+      save: (String data) async => prefsWithCache.setString('pb_auth', data),
+      initial: prefsWithCache.getString('pb_auth'),
+    );
 
-  Future<bool> signUp(String email, String password) async {
-    try {
-      final user = await _pb.collection('users').create(body: {
-        'email': email,
-        'password': password,
-        'passwordConfirm': password,
+    if (store.model == null) {
+      _pb = PocketBase(dotenv.env['POCKETBASE_URL']!);
+    }
+    else{
+      _pb = PocketBase(dotenv.env['POCKETBASE_URL']!, authStore: store);
+      _pb.collection('users').authRefresh();
+    }
+    _pb.authStore.onChange.listen((e) {
+      print('Auth state changed: $e');
+      final encoded = jsonEncode(<String, dynamic>{
+        "token": e.token,
+        "model": e.model,
       });
-
-      _authToken = user.data['token'];
-      return true;
-    } catch (e) {
-      debugPrint('Error during sign up: $e');
-      return false;
-    }
+      prefsWithCache.setString("pb_auth", encoded);
+    });
   }
 
-  Future<bool> signIn(String email, String password) async {
-    try {
-      final user = await _pb.collection('users').authWithPassword(email, password);
-      _authToken = user.token;
-      return true;
-    } catch (e) {
-      debugPrint('Error during sign in: $e');
-      return false;
-    }
-  }
+  BooksPocketbase get books => BooksPocketbase(_pb);
 
-  Future<void> signOut() async {
-    _pb.authStore.clear();
-    _authToken = null;
-  }
-
-  BooksPocketbase get booksPb => BooksPocketbase(_pb);
-
-  bool get isAuthenticated => _pb.authStore.isValid;
-
-  String? get authToken => _authToken;
+  AuthPocketbase get auth => AuthPocketbase(_pb);
 }

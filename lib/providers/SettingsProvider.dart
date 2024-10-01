@@ -5,7 +5,7 @@ Future<SharedPreferencesWithCache> initalizeSharedPreferences() async {
    final SharedPreferencesWithCache prefsWithCache =
       await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: <String>{'themeMode', 'fontSize', 'lineHeight'},
+      allowList: <String>{'themeMode', 'fontSize', 'lineHeight', 'pb_auth'},
     ),
   );
   prefsWithCache.setString('themeMode', 'system');

@@ -195,7 +195,7 @@ class _SettingsViewState extends State<SettingsView> {
                     SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () {
-                        _pbService.signOut();
+                        _pbService.auth.signOut();
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           '/login', (Route<dynamic> route) => false);
                       },

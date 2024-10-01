@@ -3,6 +3,7 @@ import 'package:langread/server/pocketbase.dart';
 import 'package:langread/views/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -16,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    if (await _pbService.signIn(email, password)) {
+    if (await _pbService.auth.signIn(email, password)) {
       // Navigate to the main screen or show success message
       Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     } else {
