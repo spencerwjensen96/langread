@@ -42,6 +42,18 @@ class LibraryBook {
   }
 
   toList() {}
+
+  static LibraryBook empty() {
+    return LibraryBook(
+      id: '',
+      title: '',
+      author: '',
+      description: '',
+      coverUrl: '',
+      dateAdded: DateTime.now(),
+      genre: '',
+    );
+  }
 }
 
 class BookPages {

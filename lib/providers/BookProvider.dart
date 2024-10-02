@@ -6,18 +6,41 @@ import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/server/pocketbase.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BookProvider extends ChangeNotifier{
+  late final prefs;
+
+  BookProvider(SharedPreferencesWithCache prefsWithCache){
+    prefs = prefsWithCache;
+    print("last book: ${prefs.getString('lastBookRead')}");
+  }
 
   BooksPocketbase booksService = PocketBaseService().books;
 
   Future<List<LibraryBook>> get books async => await _loadBooks();
 
-  // Future<List<LibraryBook>> loadBooks() async {
-  //   // books = await booksService.fetchLibraryBooks();
-  //   books = await _loadBooks();
-  //   notifyListeners();
-  // }
+  Future<LibraryBook> get lastBookRead async => await _loadLastBook();
+
+  void setLastBookRead(LibraryBook book) async {
+    await prefs.setString('lastBookRead', jsonEncode(book));
+    notifyListeners();
+  }
+
+  Future<void> downloadBook(LibraryBook book) async {
+    await _addBookToLocalFile(book);
+    await _addBookPagesToLocalFile(book.id);
+    notifyListeners();
+  }
+
+  Future<LibraryBook> _loadLastBook() async {
+    if (prefs.getString('lastBookRead') != null){
+      return LibraryBook.fromJson(jsonDecode(prefs.getString('lastBookRead')));
+    }
+    else {
+      return (await books)[0];
+    }
+  }
 
   Future<List<LibraryBook>> _loadBooks() async {
     final directory = await getApplicationDocumentsDirectory();
@@ -32,14 +55,7 @@ class BookProvider extends ChangeNotifier{
     return jsonData.map((json) => LibraryBook.fromJson(json)).toList();
   }
 
-  Future<void> downloadBook(LibraryBook book) async {
-    await _addBookToLocalFile(book);
-    await _addBookPagesToLocalFile(book.id);
-    notifyListeners();
-  }
-
-
-  Future<bool> bookAlreadyDownloaded(String id) async {
+  Future<bool> _bookAlreadyDownloaded(String id) async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/books/$id');
     if (file.existsSync()) {
@@ -50,7 +66,7 @@ class BookProvider extends ChangeNotifier{
 
   Future<void> _addBookPagesToLocalFile(String id) async {
     try {
-      var isDownloaded = await bookAlreadyDownloaded(id);
+      var isDownloaded = await _bookAlreadyDownloaded(id);
       if (isDownloaded){
         print('Book already downloaded');
         return;
@@ -73,7 +89,7 @@ class BookProvider extends ChangeNotifier{
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/books.json');
 
-    List<dynamic> books = [];
+    List<LibraryBook> books = [];
     if (await file.exists()) {
       final contents = await file.readAsString();
       books = jsonDecode(contents);
@@ -87,7 +103,7 @@ class BookProvider extends ChangeNotifier{
       'description': book.description,
       'coverUrl': book.coverUrl,
       'dateAdded': book.dateAdded.toIso8601String(),
-    });
+    } as LibraryBook);
 
     await file.writeAsString(jsonEncode(books));
   }

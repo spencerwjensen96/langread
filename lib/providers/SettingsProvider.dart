@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<SharedPreferencesWithCache> initalizeSharedPreferences() async {
-   final SharedPreferencesWithCache prefsWithCache =
-      await SharedPreferencesWithCache.create(
-    cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: <String>{'themeMode', 'fontSize', 'lineHeight', 'pb_auth'},
-    ),
-  );
-  return prefsWithCache;
-}
-
 class SettingsProvider extends ChangeNotifier{
   late final prefs;
 
