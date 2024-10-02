@@ -1,10 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:langread/providers/BookProvider.dart';
+import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/book.dart';
+import 'package:langread/server/pocketbase.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class LibraryBookDetailView extends StatelessWidget {
   final LibraryBook book;
+  // BooksPocketbase booksService = PocketBaseService().books;
 
-  const LibraryBookDetailView({Key? key, required this.book}) : super(key: key);
+  LibraryBookDetailView({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +53,13 @@ class LibraryBookDetailView extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 16),
-            ElevatedButton(onPressed: () => print('downloading ${book.title}'), child: Text('Download to Personal Library'))
+            ElevatedButton(
+                onPressed: () async {
+                  print('downloading ${book.title}');
+                  await Provider.of<BookProvider>(context, listen: false).downloadBook(book);
+
+                },
+                child: Text('Download to Personal Library'))
           ],
         ),
       ),

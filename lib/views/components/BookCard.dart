@@ -13,8 +13,6 @@ class BookCard extends StatelessWidget {
   final Function(BuildContext, LibraryBook)? onTap;
 
   void _defaultOnTap(BuildContext context, LibraryBook book) {
-    print('Tapped on book: ${book.title}');
-    print(book);
       Navigator.push(
         context,
         MaterialPageRoute(

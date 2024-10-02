@@ -44,7 +44,6 @@ class PocketBaseService {
       _pb.collection('users').authRefresh();
     }
     _pb.authStore.onChange.listen((e) {
-      print('Auth state changed: $e');
       final encoded = jsonEncode(<String, dynamic>{
         "token": e.token,
         "model": e.model,

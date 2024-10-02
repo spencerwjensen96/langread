@@ -8,18 +8,6 @@ Future<SharedPreferencesWithCache> initalizeSharedPreferences() async {
       allowList: <String>{'themeMode', 'fontSize', 'lineHeight', 'pb_auth'},
     ),
   );
-  // if (prefsWithCache.getString('themeMode') != null) {
-  //   // print(prefsWithCache.getString('themeMode'));
-  //   prefsWithCache.setString('themeMode', 'system');
-  // }
-  // if (prefsWithCache.getDouble('fontSize') != null) {
-  //   // print('${prefsWithCache.getString('fontSize')}');
-  //   prefsWithCache.setDouble('fontSize', 26.0);
-  // }
-  // if (prefsWithCache.getDouble('fontSize') != null) {
-  //   // print(prefsWithCache.getString('lineHeight').toString());
-  //   prefsWithCache.setDouble('lineHeight', 2.0);
-  // }
   return prefsWithCache;
 }
 
@@ -38,19 +26,16 @@ class SettingsProvider extends ChangeNotifier{
   ThemeMode get themeMode => getMode(prefs.getString('themeMode'));
 
   void setFontSize(double size) async {
-    // _fontSize = size;
     await prefs.setDouble('fontSize', size);
     notifyListeners();
   }
 
   void setLineHeight(double height) async {
-    // _lineHeight = height;
     await prefs.setDouble('lineHeight', height);
     notifyListeners();
   }
 
   void setThemeMode(ThemeMode mode) async {
-    // _themeMode = mode;
     await prefs.setString('themeMode', mode.toString().split('.').last);
     notifyListeners();
   }

@@ -43,7 +43,6 @@ class VocabularyProvider with ChangeNotifier {
     try {
       final file = await _localFile;
       final String itemsJson = json.encode(_items.map((item) => item.toMap()).toList());
-      print(itemsJson);
       await file.writeAsString(itemsJson);
     } catch (e) {
       print('Error saving vocabulary items: $e');

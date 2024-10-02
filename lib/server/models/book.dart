@@ -43,3 +43,9 @@ class LibraryBook {
 
   toList() {}
 }
+
+class BookPages {
+  late final List<String> pages;
+
+  BookPages({required this.pages});
+}

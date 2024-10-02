@@ -1,52 +1,36 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/views/components/BookCard.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import '../models/book.dart';
+// import '../models/book.dart';
 import '../providers/SettingsProvider.dart';
+import '../providers/BookProvider.dart';
 import 'reading_view.dart';
 
-class LibraryView extends StatelessWidget {
-  final List<LibraryBook> books = [
-    LibraryBook(
-        id: '0',
-        title: 'Sample Book 1',
-        description: '',
-        genre: '',
-        dateAdded: DateTime.now(),
-        author: 'Author 1',
-        coverUrl:
-            'https://via.placeholder.com/150'),
-    LibraryBook(
-        id: '1',
-        title: 'Sample Book 2',
-        description: '',
-        genre: '',
-        dateAdded: DateTime.now(),
-        author: 'Author 2',
-        coverUrl:
-            'https://via.placeholder.com/150'),
-    LibraryBook(
-        id: '2',
-        title: 'Brothers Lionheart',
-        description: '',
-        genre: '',
-        dateAdded: DateTime.now(),
-        author: 'Astrid Lindgren',
-        coverUrl:
-            'https://via.placeholder.com/150'),
-    LibraryBook(
-        id: '3',
-        title: 'Broderna Lejonhjarta',
-        description: '',
-        genre: '',
-        dateAdded: DateTime.now(),
-        author: 'Astrid Lindgren',
-        coverUrl:
-            'https://somewhereboy.wordpress.com/wp-content/uploads/2017/09/the-brothers-lionheart.jpg'),
-  ];
+class LibraryView extends StatefulWidget {
+  @override
+  _LibraryViewState createState() => _LibraryViewState();
+}
+
+class _LibraryViewState extends State<LibraryView> {
+  late Future<List<LibraryBook>> books;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    books = Provider.of<BookProvider>(context, listen: true).books;
+  }
+
+
 
   void _showOptionsModal(BuildContext context) {
     showDialog(
@@ -87,6 +71,20 @@ class LibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(future: books, builder: 
+      (context, AsyncSnapshot<List<LibraryBook>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('An error occurred'));
+        } else {
+          return _buildLibraryView(snapshot.data!);
+        }
+      }
+    );
+  }
+
+  _buildLibraryView(List<LibraryBook> books) {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Library',
