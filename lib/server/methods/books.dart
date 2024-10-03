@@ -29,6 +29,7 @@ class BooksPocketbase {
           coverUrl: item.data['cover_url'],
           dateAdded: DateTime.parse(item.created),
           genre: item.data['genre'],
+          language: item.data['language'],
         );
       }).toList();
     } catch (e) {

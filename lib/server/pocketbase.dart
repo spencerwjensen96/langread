@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:langread/providers/SettingsProvider.dart';
 import 'package:langread/server/methods/auth.dart';
 import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/user.dart';
 import 'package:pocketbase/pocketbase.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PocketBaseService {

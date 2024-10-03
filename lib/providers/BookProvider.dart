@@ -22,6 +22,18 @@ class BookProvider extends ChangeNotifier{
 
   Future<LibraryBook> get lastBookRead async => await _loadLastBook();
 
+  void setBookmark(LibraryBook book, int page) async {
+    var bookmarks = prefs.getString('bookmarks');
+    if (bookmarks == '' || bookmarks == null){
+      await prefs.setString('bookmarks', jsonEncode({book.id: page}));
+    }
+    else {
+      Map<String, dynamic> bookmarksMap = jsonDecode(bookmarks);
+      bookmarksMap[book.id] = page;
+      await prefs.setString('bookmarks', jsonEncode(bookmarksMap));
+    }
+  }
+
   void setLastBookRead(LibraryBook book) async {
     await prefs.setString('lastBookRead', jsonEncode(book));
     notifyListeners();
@@ -33,12 +45,27 @@ class BookProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future<int> getBookmark(String bookId) async {
+    var bookmarks = prefs.getString('bookmarks');
+    // print(bookmarks);
+    if (bookmarks == '' || bookmarks == null){
+      return 1;
+    }
+    Map<String, dynamic> bookmarksMap = jsonDecode(bookmarks);
+    return bookmarksMap[bookId] ?? 1;
+  }
+
   Future<LibraryBook> _loadLastBook() async {
     if (prefs.getString('lastBookRead') != null){
-      return LibraryBook.fromJson(jsonDecode(prefs.getString('lastBookRead')));
+      var json = jsonDecode(prefs.getString('lastBookRead'));
+      return LibraryBook.fromJson(json);
     }
     else {
-      return (await books)[0];
+      var b = await books;
+      if (b.isEmpty) {
+        return LibraryBook.empty();
+      }
+      return b[0];
     }
   }
 
@@ -47,7 +74,7 @@ class BookProvider extends ChangeNotifier{
     final file = File('${directory.path}/books.json');
     if (!await file.exists()) {
       await file.create();
-      await file.writeAsString(jsonEncode([]));
+      await file.writeAsString(jsonEncode("[]"));
       return [];
     }
     final contents = await file.readAsString();
@@ -89,7 +116,7 @@ class BookProvider extends ChangeNotifier{
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/books.json');
 
-    List<LibraryBook> books = [];
+    List<dynamic> books = [];
     if (await file.exists()) {
       final contents = await file.readAsString();
       books = jsonDecode(contents);
@@ -99,11 +126,12 @@ class BookProvider extends ChangeNotifier{
       'id': book.id,
       'title': book.title,
       'author': book.author,
+      'language': book.language,
       'genre': book.genre,
       'description': book.description,
       'coverUrl': book.coverUrl,
       'dateAdded': book.dateAdded.toIso8601String(),
-    } as LibraryBook);
+    });
 
     await file.writeAsString(jsonEncode(books));
   }

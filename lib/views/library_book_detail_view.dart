@@ -1,12 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:langread/providers/BookProvider.dart';
-import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/book.dart';
-import 'package:langread/server/pocketbase.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class LibraryBookDetailView extends StatelessWidget {
@@ -44,6 +38,11 @@ class LibraryBookDetailView extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
+              'Language: ${book.language}',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 8),
+            Text(
               'Genre: ${book.genre}',
               style: TextStyle(fontSize: 18),
             ),
@@ -55,7 +54,7 @@ class LibraryBookDetailView extends StatelessWidget {
             SizedBox(height: 16),
             ElevatedButton(
                 onPressed: () async {
-                  print('downloading ${book.title}');
+                  print('downloading ${book.toString()}');
                   await Provider.of<BookProvider>(context, listen: false).downloadBook(book);
 
                 },

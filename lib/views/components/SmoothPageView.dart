@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:langread/providers/BookProvider.dart';
+import 'package:langread/server/models/book.dart';
 import 'package:langread/views/components/DictionaryEntry.dart';
 import 'package:langread/views/components/QuizPopup.dart';
 import 'package:provider/provider.dart';
@@ -7,8 +9,9 @@ import '../../providers/SettingsProvider.dart';
 
 class SmoothPageView extends StatefulWidget {
   final List<String> pages;
+  final LibraryBook book;
 
-  const SmoothPageView({Key? key, required this.pages}) : super(key: key);
+  const SmoothPageView({Key? key, required this.pages, required this.book}) : super(key: key);
 
   @override
   _SmoothPageViewState createState() => _SmoothPageViewState();
@@ -19,16 +22,29 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   double _currentPage = 0;
   bool _hasInteracted = false;
   List<String> _interactedWords = <String>[];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController()
-      ..addListener(() {
-        setState(() {
-          _currentPage = _pageController.page!;
-        });
+    _initializePageController();
+  }
+
+  Future<void> _initializePageController() async {
+    final bookProvider = Provider.of<BookProvider>(context, listen: false);
+    final initialIndex = (await bookProvider.getBookmark(widget.book.id)) - 1;
+    
+    setState(() {
+      _pageController = PageController(initialPage: initialIndex);
+      _currentPage = initialIndex.toDouble();
+      _isLoading = false;
+    });
+
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!;
       });
+    });
   }
 
   @override
@@ -42,6 +58,10 @@ class _SmoothPageViewState extends State<SmoothPageView> {
       _hasInteracted = true;
     });
     _interactedWords.add(word);
+  }
+
+  void _setBookmark({required int pageNumber}) {
+    Provider.of<BookProvider>(context, listen: false).setBookmark(widget.book, pageNumber + 1);
   }
 
   void _navigateToPreviousPage() {
@@ -64,12 +84,19 @@ class _SmoothPageViewState extends State<SmoothPageView> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.book.title)),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity! > 0) {
             // Swipe right
             _navigateToPreviousPage();
+            
           } else if (details.primaryVelocity! < 0) {
             // Swipe left
             _navigateToNextPage();
@@ -101,6 +128,7 @@ class _SmoothPageViewState extends State<SmoothPageView> {
             );
           },
           onPageChanged: (value) {
+            _setBookmark(pageNumber: value);
             if (_hasInteracted){
               showDialog(
                 context: context,
@@ -134,7 +162,7 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                 onPressed: () {
                   Navigator.of(context).pushNamed('/vocabulary');
                 },
-                child: const Text('Vocab'),
+                child: Text('Vocab'),
                 ),
               Text(
                   'Page ${_currentPage.floor() + 1} of ${widget.pages.length}'),
@@ -142,11 +170,16 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: _navigateToPreviousPage,
+                    onPressed: () {
+                      _navigateToPreviousPage();
+                    }
+                    
                   ),
                   IconButton(
                     icon: const Icon(Icons.arrow_forward),
-                    onPressed: _navigateToNextPage,
+                    onPressed: () {
+                      _navigateToNextPage();
+                    }
                   ),
                 ],
               ),

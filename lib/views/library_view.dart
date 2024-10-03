@@ -1,15 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/views/components/BookCard.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-// import '../models/book.dart';
 import '../providers/SettingsProvider.dart';
 import '../providers/BookProvider.dart';
-import 'reading_view.dart';
 
 class LibraryView extends StatefulWidget {
   @override

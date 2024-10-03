@@ -78,7 +78,7 @@ class _ReadingViewState extends State<ReadingView> {
                 )
               ],
             ),
-            body: SmoothPageView(pages: samplePages),
+            body: SmoothPageView(book: widget.book, pages: samplePages),
           );
         }
       },

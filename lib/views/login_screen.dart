@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:langread/server/pocketbase.dart';
-import 'package:langread/views/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   

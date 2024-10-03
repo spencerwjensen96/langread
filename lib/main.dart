@@ -34,6 +34,9 @@ void main() async {
 }
 class MyApp extends StatelessWidget {
   PocketBaseService pbService = PocketBaseService();
+
+  MyApp({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return  

@@ -7,6 +7,7 @@ class SharedPreferencesConfig {
     'lineHeight',
     'pb_auth',
     'lastBookRead',
+    'bookmarks',
   };
 
   static Future<SharedPreferencesWithCache> initalizeSharedPreferences() async {
