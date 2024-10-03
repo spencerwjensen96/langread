@@ -13,7 +13,6 @@ class BookProvider extends ChangeNotifier{
 
   BookProvider(SharedPreferencesWithCache prefsWithCache){
     prefs = prefsWithCache;
-    print("last book: ${prefs.getString('lastBookRead')}");
   }
 
   BooksPocketbase booksService = PocketBaseService().books;
