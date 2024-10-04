@@ -11,7 +11,8 @@ class SmoothPageView extends StatefulWidget {
   final List<String> pages;
   final LibraryBook book;
 
-  const SmoothPageView({Key? key, required this.pages, required this.book}) : super(key: key);
+  const SmoothPageView({Key? key, required this.pages, required this.book})
+      : super(key: key);
 
   @override
   _SmoothPageViewState createState() => _SmoothPageViewState();
@@ -33,7 +34,7 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   Future<void> _initializePageController() async {
     final bookProvider = Provider.of<BookProvider>(context, listen: false);
     final initialIndex = (await bookProvider.getBookmark(widget.book.id)) - 1;
-    
+
     setState(() {
       _pageController = PageController(initialPage: initialIndex);
       _currentPage = initialIndex.toDouble();
@@ -61,7 +62,8 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   }
 
   void _setBookmark({required int pageNumber}) {
-    Provider.of<BookProvider>(context, listen: false).setBookmark(widget.book, pageNumber + 1);
+    Provider.of<BookProvider>(context, listen: false)
+        .setBookmark(widget.book, pageNumber + 1);
   }
 
   void _navigateToPreviousPage() {
@@ -92,16 +94,15 @@ class _SmoothPageViewState extends State<SmoothPageView> {
     }
     return Scaffold(
       body: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          if (details.primaryVelocity! > 0) {
-            // Swipe right
-            _navigateToPreviousPage();
-            
-          } else if (details.primaryVelocity! < 0) {
-            // Swipe left
-            _navigateToNextPage();
-          }
-        },
+        // onHorizontalDragEnd: (details) {
+        //   if (details.primaryVelocity! > 0) {
+        //     // Swipe right
+        //     // _navigateToPreviousPage();
+        //   } else if (details.primaryVelocity! < 0) {
+        //     // Swipe left
+        //     _navigateToNextPage();
+        //   }
+        // },
         child: PageView.builder(
           controller: _pageController,
           itemCount: widget.pages.length,
@@ -124,12 +125,19 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                   ),
                 );
               },
-              child: PageContent(content: widget.pages[index], onInteraction: _onInteraction),
+              child: PageContent(
+                  content: widget.pages[index], onInteraction: _onInteraction),
             );
           },
           onPageChanged: (value) {
+            if(value < _currentPage) {
+              setState(() {
+                _hasInteracted = false;
+                _interactedWords.clear();
+              });
+            }
             _setBookmark(pageNumber: value);
-            if (_hasInteracted){
+            if (_hasInteracted) {
               showDialog(
                 context: context,
                 builder: (context) {
@@ -158,29 +166,26 @@ class _SmoothPageViewState extends State<SmoothPageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-                TextButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed('/vocabulary');
                 },
                 child: Text('Vocab'),
-                ),
+              ),
               Text(
                   'Page ${_currentPage.floor() + 1} of ${widget.pages.length}'),
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      _navigateToPreviousPage();
-                    }
-                    
-                  ),
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        _navigateToPreviousPage();
+                      }),
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: () {
-                      _navigateToNextPage();
-                    }
-                  ),
+                      icon: const Icon(Icons.arrow_forward),
+                      onPressed: () {
+                        _navigateToNextPage();
+                      }),
                 ],
               ),
             ],
@@ -195,7 +200,8 @@ class PageContent extends StatefulWidget {
   final String content;
   final Function onInteraction;
 
-  const PageContent({super.key, required this.content, required this.onInteraction});
+  const PageContent(
+      {super.key, required this.content, required this.onInteraction});
 
   @override
   _PageContentState createState() => _PageContentState();
@@ -250,7 +256,8 @@ class _PageContentState extends State<PageContent> {
                                 context: context,
                                 isScrollControlled: true,
                                 builder: ((context) {
-                                  return DictionaryEntry(word: word, context: widget.content);
+                                  return DictionaryEntry(
+                                      word: word, context: widget.content);
                                 }));
                           }
                           setState(() {
