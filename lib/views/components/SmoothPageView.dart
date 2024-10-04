@@ -250,7 +250,7 @@ class _PageContentState extends State<PageContent> {
                                 context: context,
                                 isScrollControlled: true,
                                 builder: ((context) {
-                                  return DictionaryEntry(word: word);
+                                  return DictionaryEntry(word: word, context: widget.content);
                                 }));
                           }
                           setState(() {

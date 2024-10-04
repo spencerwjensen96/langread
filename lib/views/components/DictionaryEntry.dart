@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:deepl_dart/deepl_dart.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:langread/models/vocabulary_item.dart';
 import 'package:langread/providers/VocabProviders.dart';
+import 'package:langread/utils/deepl.dart';
 import 'package:provider/provider.dart';
 
 class DictionaryEntry extends StatefulWidget {
   final String word;
+  final String context;
 
-  const DictionaryEntry({Key? key, required this.word}) : super(key: key);
+  const DictionaryEntry({Key? key, required this.word, required this.context}) : super(key: key);
 
   @override
   _DictionaryEntryState createState() => _DictionaryEntryState();
@@ -16,17 +16,15 @@ class DictionaryEntry extends StatefulWidget {
 
 class _DictionaryEntryState extends State<DictionaryEntry> {
   late Future<Map<String, dynamic>> _wordInfo;
-  final Translator translator =
-      Translator(authKey: dotenv.env['DEEPL_API_KEY']!);
 
   @override
   void initState() {
     super.initState();
-    _wordInfo = fetchWordInfo(widget.word);
+    _wordInfo = fetchWordInfo(widget.word, widget.context);
   }
 
-  Future<Map<String, dynamic>> fetchWordInfo(String word) async {
-    final translation = await fetchTranslation(word);
+  Future<Map<String, dynamic>> fetchWordInfo(String word, String context) async {
+    final translation = await fetchTranslation(word, context);
     final definition = await fetchDefinition(word);
     final examples = await fetchExamples(word);
     final synonyms = await fetchSynonyms(word);
@@ -39,13 +37,12 @@ class _DictionaryEntryState extends State<DictionaryEntry> {
     };
   }
 
-  Future<String> fetchTranslation(String word) async {
-    final result = await translator.translateTextSingular(
-      word,
-      'en',
-      sourceLang: 'sv',
-    );
-    return result.text;
+  Future<String> fetchTranslation(String word, String context) async {
+    var response = await DeepL.translateText(text: word, sourceLang: 'sv', targetLang: 'en', context: context);
+    if (response == null) {
+      return 'Translation not found';
+    }
+    return response;
   }
 
   Future<String> fetchDefinition(String word) async {
