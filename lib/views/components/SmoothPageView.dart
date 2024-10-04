@@ -94,15 +94,15 @@ class _SmoothPageViewState extends State<SmoothPageView> {
     }
     return Scaffold(
       body: GestureDetector(
-        // onHorizontalDragEnd: (details) {
-        //   if (details.primaryVelocity! > 0) {
-        //     // Swipe right
-        //     // _navigateToPreviousPage();
-        //   } else if (details.primaryVelocity! < 0) {
-        //     // Swipe left
-        //     _navigateToNextPage();
-        //   }
-        // },
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity! > 0) {
+            // Swipe right
+            _navigateToPreviousPage();
+          } else if (details.primaryVelocity! < 0) {
+            // Swipe left
+            _navigateToNextPage();
+          }
+        },
         child: PageView.builder(
           controller: _pageController,
           itemCount: widget.pages.length,
