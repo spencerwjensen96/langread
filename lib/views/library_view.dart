@@ -87,7 +87,7 @@ class _LibraryViewState extends State<LibraryView> {
                     .superfontSize)),
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(32),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 0.7,

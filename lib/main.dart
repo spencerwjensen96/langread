@@ -33,7 +33,7 @@ void main() async {
       child: MyApp()));
 }
 class MyApp extends StatelessWidget {
-  PocketBaseService pbService = PocketBaseService();
+  final PocketBaseService pbService = PocketBaseService();
 
   MyApp({super.key});
   
