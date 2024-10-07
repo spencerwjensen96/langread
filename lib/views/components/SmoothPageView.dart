@@ -239,15 +239,19 @@ class _PageContentState extends State<PageContent> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(flex: 1),
-                  Text(parsedTags['title']!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: settings.superfontSize,
-                          fontWeight: FontWeight.bold)),
+                  parsedTags['title'] != null
+                      ? Text(parsedTags['title']!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: settings.superfontSize,
+                              fontWeight: FontWeight.bold))
+                      : Container(),
                   const SizedBox(height: 16),
-                  Text(parsedTags['author']!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: settings.subfontSize)),
+                  parsedTags['author'] != null
+                      ? Text(parsedTags['author']!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: settings.subfontSize))
+                      : Container(),
                   const Spacer(flex: 3),
                 ],
               );
@@ -256,23 +260,27 @@ class _PageContentState extends State<PageContent> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Spacer(flex: 1),
-                  Text(parsedTags['heading']!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: settings.superfontSize,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 16),
-                  Text(parsedTags['pages']!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: settings.subfontSize)),
-                  const Spacer(flex: 3),
+                  parsedTags['heading'] != null
+                      ? Text(parsedTags['heading']!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: settings.superfontSize,
+                              fontWeight: FontWeight.bold))
+                      : Container(),
+                  const Spacer(flex: 2),
+                  parsedTags['pages'] != null
+                      ? Text(parsedTags['pages']!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: settings.subfontSize))
+                      : Container(),
+                  const Spacer(flex: 1),
                 ],
               );
             default:
               return Center(child: Text(contentString));
           }
         }
-        final words = widget.content.split(' ');
+        final words = widget.content.replaceAll(r'\n', '\n').split(' ');
         return Padding(
           padding: const EdgeInsets.all(48.0),
           child: SingleChildScrollView(
