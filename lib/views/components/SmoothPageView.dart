@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:langread/providers/BookProvider.dart';
 import 'package:langread/server/models/book.dart';
+import 'package:langread/utils/utils.dart';
 import 'package:langread/views/components/DictionaryEntry.dart';
 import 'package:langread/views/components/QuizPopup.dart';
 import 'package:provider/provider.dart';
@@ -130,7 +131,7 @@ class _SmoothPageViewState extends State<SmoothPageView> {
             );
           },
           onPageChanged: (value) {
-            if(value < _currentPage) {
+            if (value < _currentPage) {
               setState(() {
                 _hasInteracted = false;
                 _interactedWords.clear();
@@ -196,6 +197,10 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   }
 }
 
+bool _isSpecialPage(String content) {
+  return content.contains("#titlepage#") || content.contains("#chapter#");
+}
+
 class PageContent extends StatefulWidget {
   final String content;
   final Function onInteraction;
@@ -222,52 +227,90 @@ class _PageContentState extends State<PageContent> {
   Widget build(BuildContext context) {
     return Consumer<SettingsProvider>(
       builder: (context, settings, child) {
-        final words = widget.content.split(' ');
-        return Container(
-          decoration: BoxDecoration(
-            color: settings.themeMode == ThemeMode.dark
-                ? Colors.black
-                : Colors.white,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(48.0),
-            child: SingleChildScrollView(
-              child: RichText(
-                text: TextSpan(
-                  children: words.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final word = entry.value;
-                    return TextSpan(
-                      text: '$word ',
+        if (_isSpecialPage(widget.content)) {
+          var contentString = widget.content;
+          var re = RegExp(r'#(\w*)#');
+          var pageType = re.firstMatch(contentString)![1];
+          var parsedTags = parseCustomTags(contentString.replaceAll(re, ''));
+
+          switch (pageType) {
+            case 'titlepage':
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 1),
+                  Text(parsedTags['title']!,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: settings.fontSize,
-                        height: settings.lineHeight,
-                        color: _wordTapped[index]
-                            ? Colors.blue
-                            : (settings.themeMode == ThemeMode.dark
-                                ? Colors.white
-                                : Colors.black),
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          if (!_wordTapped[index]) {
-                            // Fetch the meaning from a dictionary.
-                            showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: ((context) {
-                                  return DictionaryEntry(
-                                      word: word, context: widget.content);
-                                }));
-                          }
-                          setState(() {
-                            _wordTapped[index] = !_wordTapped[index];
-                          });
-                          widget.onInteraction(word);
-                        },
-                    );
-                  }).toList(),
-                ),
+                          fontSize: settings.superfontSize,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  Text(parsedTags['author']!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: settings.subfontSize)),
+                  const Spacer(flex: 3),
+                ],
+              );
+            case 'chapter':
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Spacer(flex: 1),
+                  Text(parsedTags['heading']!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: settings.superfontSize,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  Text(parsedTags['pages']!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: settings.subfontSize)),
+                  const Spacer(flex: 3),
+                ],
+              );
+            default:
+              return Center(child: Text(contentString));
+          }
+        }
+        final words = widget.content.split(' ');
+        return Padding(
+          padding: const EdgeInsets.all(48.0),
+          child: SingleChildScrollView(
+            child: RichText(
+              text: TextSpan(
+                children: words.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final word = entry.value;
+                  return TextSpan(
+                    text: '$word ',
+                    style: TextStyle(
+                      fontSize: settings.fontSize,
+                      height: settings.lineHeight,
+                      color: _wordTapped[index]
+                          ? Colors.blue
+                          : (settings.themeMode == ThemeMode.dark
+                              ? Colors.white
+                              : Colors.black),
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        if (!_wordTapped[index]) {
+                          // Fetch the meaning from a dictionary.
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: ((context) {
+                                return DictionaryEntry(
+                                    word: word, context: widget.content);
+                              }));
+                        }
+                        setState(() {
+                          _wordTapped[index] = !_wordTapped[index];
+                        });
+                        widget.onInteraction(word);
+                      },
+                  );
+                }).toList(),
               ),
             ),
           ),

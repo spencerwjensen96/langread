@@ -5,3 +5,19 @@ bool listEquals<T>(List<T> a, List<T> b) {
   }
   return true;
 }
+
+Map<String, String> parseCustomTags(String html) {
+  final RegExp tagPattern = RegExp(r'<(\w+)>(.*?)<\/\1>', dotAll: true);
+
+  final Map<String, String> tagContentMap = {};
+
+  Iterable<RegExpMatch> matches = tagPattern.allMatches(html);
+
+  for (var match in matches) {
+    String tag = match.group(1)!; // Group 1 is the tag name
+    String content = match.group(2)!; // Group 2 is the content inside the tag
+    tagContentMap[tag] = content;
+  }
+
+  return tagContentMap;
+}

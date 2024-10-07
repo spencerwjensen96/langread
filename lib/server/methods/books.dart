@@ -54,7 +54,6 @@ class BooksPocketbase {
         final bytes = await consolidateHttpClientResponseBytes(http_response);
         await file.create(recursive: true);
         await file.writeAsBytes(bytes);
-
       } catch (e) {
         throw Exception('Error fetching books: $e');
       }
