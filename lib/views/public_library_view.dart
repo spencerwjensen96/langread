@@ -53,7 +53,7 @@ class PublicLibraryScreen extends StatelessWidget {
               ),
               itemCount: books.length,
               itemBuilder: (context, index) {
-                return BookCard(book: books[index], onTap: _onTap(context, books[index]),);
+                return BookCard(book: books[index], onTap: _onTap(context, books[index]), includeMenu: false,);
               },
             );
           }

@@ -7,10 +7,24 @@ import 'package:langread/server/models/book.dart';
 import 'package:langread/views/reading_view.dart';
 import 'package:provider/provider.dart';
 
-class BookCard extends StatelessWidget {
+class BookCard extends StatefulWidget {
   final LibraryBook book;
-  
+  final bool includeMenu;
   final Function(BuildContext, LibraryBook)? onTap;
+const BookCard({
+    Key? key,
+    required this.book,
+    required this.includeMenu,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  _BookCardState createState() => _BookCardState();
+}
+
+class _BookCardState extends State<BookCard> {
+  final OverlayPortalController _menuController = OverlayPortalController();
+  final LayerLink _layerLink = LayerLink();
 
   void _defaultOnTap(BuildContext context, LibraryBook book) {
       Navigator.push(
@@ -20,48 +34,115 @@ class BookCard extends StatelessWidget {
         ),
       );
   }
-  
-  BookCard({super.key, required this.book, this.onTap});
+
+  void _showMenu() {
+    if (_menuController.isShowing) {
+      _menuController.hide();
+    } else {
+      _menuController.show();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onTap != null ? onTap!(context, book) : _defaultOnTap(context, book);
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: book.coverUrl.startsWith('file://')
-                ? Image.file(
-                    File(book.coverUrl.replaceFirst(RegExp(r'file://'), '')),
-                    fit: BoxFit.cover,
-                  )
-                : Image.network(
-                    book.coverUrl,
-                    fit: BoxFit.cover,
-                  ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            book.title,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: Provider.of<SettingsProvider>(context, listen: false)
-                    .fontSize),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            book.author,
-            style: TextStyle(
-                fontSize: Provider.of<SettingsProvider>(context, listen: false)
-                    .subfontSize),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: GestureDetector(
+        onTap: () {
+          widget.onTap != null ? widget.onTap!(context, widget.book) : _defaultOnTap(context, widget.book);
+        },
+        onLongPress: _showMenu,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: widget.book.coverUrl.startsWith('file://')
+                  ? Image.file(
+                      File(widget.book.coverUrl.replaceFirst(RegExp(r'file://'), '')),
+                      fit: BoxFit.cover,
+                    )
+                  : Image.network(
+                      widget.book.coverUrl,
+                      fit: BoxFit.cover,
+                    ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.book.title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: Provider.of<SettingsProvider>(context, listen: false)
+                      .fontSize),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              widget.book.author,
+              style: TextStyle(
+                  fontSize: Provider.of<SettingsProvider>(context, listen: false)
+                      .subfontSize),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            widget.includeMenu ?
+            OverlayPortal(
+              controller: _menuController,
+              overlayChildBuilder: (BuildContext context) {
+                return Stack(
+                  children: [
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: () => _menuController.hide(),
+                        child: Container(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                    CompositedTransformFollower(
+                      link: _layerLink,
+                      targetAnchor: Alignment.bottomCenter,
+                      followerAnchor: Alignment.topCenter,
+                      offset: Offset(0, 0),
+                      child: Material(
+                        elevation: 8,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          width: 240,
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.book),
+                                title: Text('Read Book'),
+                                onTap: () {
+                                  _menuController.hide();
+                                  widget.onTap != null
+                                      ? widget.onTap!(context, widget.book)
+                                      : _defaultOnTap(context, widget.book);
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.delete),
+                                title: Text('Delete from Library'),
+                                onTap: () {
+                                  _menuController.hide();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Delete functionality not implemented')),
+                                    );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ) : Container(),
+          ],
+        ),
       ),
     );
   }

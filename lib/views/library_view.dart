@@ -96,7 +96,7 @@ class _LibraryViewState extends State<LibraryView> {
         ),
         itemCount: books.length,
         itemBuilder: (context, index) {
-          return BookCard(book: books[index]);
+          return BookCard(book: books[index], includeMenu: true);
         },
       ),
       floatingActionButton: FloatingActionButton(
