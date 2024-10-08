@@ -54,6 +54,10 @@ class BookProvider extends ChangeNotifier{
     return bookmarksMap[bookId] ?? 1;
   }
 
+  Future<void> deleteBook(LibraryBook book) async {
+    print('deleting book ${book.id}');
+  }
+
   Future<LibraryBook> _loadLastBook() async {
     if (prefs.getString('lastBookRead') != null){
       var json = jsonDecode(prefs.getString('lastBookRead'));

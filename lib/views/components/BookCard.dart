@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:langread/providers/BookProvider.dart';
 // import 'package:langread/models/book.dart';
 import 'package:langread/providers/SettingsProvider.dart';
 import 'package:langread/server/models/book.dart';
@@ -126,6 +127,7 @@ class _BookCardState extends State<BookCard> {
                                 leading: Icon(Icons.delete),
                                 title: Text('Delete from Library'),
                                 onTap: () {
+                                  Provider.of<BookProvider>(context, listen: false).deleteBook(widget.book);
                                   _menuController.hide();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('Delete functionality not implemented')),
