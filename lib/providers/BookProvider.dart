@@ -55,7 +55,22 @@ class BookProvider extends ChangeNotifier{
   }
 
   Future<void> deleteBook(LibraryBook book) async {
-    print('deleting book ${book.id}');
+    var lastBook = await lastBookRead;
+    if (lastBook.id == book.id){
+      await prefs.remove('lastBookRead');
+    }
+    var directory = await getApplicationDocumentsDirectory();
+    var booksFile = File('${directory.path}/books.json');
+    var contents = await booksFile.readAsString();
+    var books = jsonDecode(contents);
+    books.removeWhere((b) => b['id'] == book.id);
+    await booksFile.writeAsString(jsonEncode(books));
+
+    var bookDirectory = Directory('${directory.path}/books/${book.id}');
+    if (bookDirectory.existsSync()){
+      bookDirectory.deleteSync(recursive: true);
+    }
+    notifyListeners();
   }
 
   Future<LibraryBook> _loadLastBook() async {

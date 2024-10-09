@@ -130,7 +130,7 @@ class _BookCardState extends State<BookCard> {
                                   Provider.of<BookProvider>(context, listen: false).deleteBook(widget.book);
                                   _menuController.hide();
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Delete functionality not implemented')),
+                                      SnackBar(content: Text('Book deleted')),
                                     );
                                 },
                               ),
