@@ -6,8 +6,6 @@ import 'package:langread/server/pocketbase.dart';
 import 'package:langread/views/components/AppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:langread/views/components/SmoothPageView.dart';
-import '../providers/SettingsProvider.dart';
-
 
 class ReadingView extends StatefulWidget {
   final LibraryBook book;

@@ -3,7 +3,6 @@ import 'package:langread/server/models/book.dart';
 import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/BookCard.dart';
 import 'package:provider/provider.dart';
-import '../providers/SettingsProvider.dart';
 import '../providers/BookProvider.dart';
 
 class LibraryView extends StatefulWidget {
