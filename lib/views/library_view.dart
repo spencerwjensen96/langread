@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:langread/server/models/book.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/BookCard.dart';
 import 'package:provider/provider.dart';
 import '../providers/SettingsProvider.dart';
@@ -80,12 +81,7 @@ class _LibraryViewState extends State<LibraryView> {
 
   _buildLibraryView(List<LibraryBook> books) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Library',
-            style: TextStyle(
-                fontSize: Provider.of<SettingsProvider>(context, listen: false)
-                    .superfontSize)),
-      ),
+      appBar: MainAppBar(title: 'My Library', homeButton: false),
       body: GridView.builder(
         padding: const EdgeInsets.all(32),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:langread/providers/BookProvider.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/utils/utils.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/DictionaryEntry.dart';
 import 'package:langread/views/components/QuizPopup.dart';
 import 'package:provider/provider.dart';
@@ -89,8 +90,8 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.book.title)),
-        body: Center(child: CircularProgressIndicator()),
+        appBar: MainAppBar(title: widget.book.title, homeButton: true),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
     return Scaffold(

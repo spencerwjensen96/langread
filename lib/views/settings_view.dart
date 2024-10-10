@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:langread/server/pocketbase.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:provider/provider.dart';
 import '../providers/SettingsProvider.dart';
 
@@ -100,11 +101,9 @@ class _SettingsViewState extends State<SettingsView> {
   //   return Consumer<SettingsProvider>(
   // builder: (context, settings, child) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: const MainAppBar(title: 'Settings', homeButton: true),
       body: ListView(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             children: [
               _buildSettingSection(
                 'Reading Settings',

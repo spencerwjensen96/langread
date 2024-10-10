@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:langread/server/pocketbase.dart';
+import 'package:langread/views/components/AppBar.dart';
 
 class LoginScreen extends StatefulWidget {
   
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: const MainAppBar(title: 'Login', homeButton: false,),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Center(

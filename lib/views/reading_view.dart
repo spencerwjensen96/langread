@@ -3,6 +3,7 @@ import 'package:langread/providers/BookProvider.dart';
 import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/server/pocketbase.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:langread/views/components/SmoothPageView.dart';
 import '../providers/SettingsProvider.dart';
@@ -36,48 +37,18 @@ class _ReadingViewState extends State<ReadingView> {
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.book.title, style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).superfontSize)),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.home),
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-                  }
-                )
-              ],
-            ),
-            body: Center(child: CircularProgressIndicator()),
+            appBar: MainAppBar(title: widget.book.title, homeButton: true),
+            body: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.book.title, style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).superfontSize)),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.home),
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-                  }
-                )
-              ],
-            ),
+            appBar: MainAppBar(title: widget.book.title, homeButton: true),
             body: Center(child: Text('Error: ${snapshot.error}')),
           );
         } else {
           final List<String> samplePages = snapshot.data?.pages ?? [];
           return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.book.title, style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).superfontSize)),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.home),
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-                  }
-                )
-              ],
-            ),
+            appBar: MainAppBar(title: widget.book.title, homeButton: true),
             body: SmoothPageView(book: widget.book, pages: samplePages),
           );
         }

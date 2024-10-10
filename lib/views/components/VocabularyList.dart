@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:langread/providers/SettingsProvider.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:provider/provider.dart';
 import '../../providers/VocabProviders.dart';
 
 class VocabularyList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Vocabulary List'),
-        actions: [
-          IconButton(
+
+  deleteButton (context) => IconButton(
             icon: Icon(Icons.delete_sweep),
             onPressed: () {
               showDialog(
@@ -34,9 +30,12 @@ class VocabularyList extends StatelessWidget {
                 ),
               );
             },
-          ),
-        ],
-      ),
+          );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MainAppBar(title: 'Vocabulary List', homeButton: false, additionalActions: [deleteButton(context)],),
       body: Consumer<VocabularyProvider>(
         builder: (context, vocabularyProvider, child) {
           if (vocabularyProvider.items.isEmpty) {

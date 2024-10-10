@@ -23,6 +23,7 @@ migrate_working_dir/
 .env
 
 backend/pb_data/
+backend/dictionaries/
 
 devtools_options.yaml
 

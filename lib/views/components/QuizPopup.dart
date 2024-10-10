@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/SentenceScramble.dart';
 
 class QuizPopup extends StatefulWidget {
@@ -136,9 +137,7 @@ $example
             return Center(child: Text('No questions available'));
           } else {
             return Scaffold(
-                appBar: AppBar(
-                  title: Text('Quiz'),
-                ),
+                appBar: const MainAppBar(title: 'Quiz', homeButton: false),
                 body: FutureBuilder<List<Map<String, dynamic>>>(
                     future: _questionsFuture,
                     builder: (context, snapshot) {

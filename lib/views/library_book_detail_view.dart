@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:langread/providers/BookProvider.dart';
 import 'package:langread/server/models/book.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:provider/provider.dart';
 
 class LibraryBookDetailView extends StatelessWidget {
@@ -12,9 +13,7 @@ class LibraryBookDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(book.title),
-      ),
+      appBar: MainAppBar(title: book.title, homeButton: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

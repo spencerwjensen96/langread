@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/server/pocketbase.dart';
+import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/BookCard.dart';
 
 class PublicLibraryScreen extends StatelessWidget {
@@ -28,9 +29,7 @@ class PublicLibraryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Public Library'),
-      ),
+      appBar: MainAppBar(title: 'Public Library', homeButton: true,),
       body: FutureBuilder<List<LibraryBook>>(
         future: fetchBooks(),
         builder: (context, snapshot) {
