@@ -52,7 +52,6 @@ class _SettingsViewState extends State<SettingsView> {
                               labelText: 'New Username',
                               border: OutlineInputBorder(),
                             ),
-                            // style: TextStyle(fontSize: Provider.of<SettingsProvider>(context).fontSize),
                           ),
                         ),
                         SizedBox(width: 8),
@@ -145,7 +144,8 @@ class _SettingsViewState extends State<SettingsView> {
                       value: settings.themeMode,
                       onChanged: (ThemeMode? value) {
                         if (value != null) settings.setThemeMode(value);
-                        Navigator.of(context).pushNamedAndRemoveUntil('/settings', (Route<dynamic> route) => false);
+                        
+                        // Navigator.of(context).pushNamedAndRemoveUntil('/settings', (Route<dynamic> route) => false);
                       },
                       items: [
                         DropdownMenuItem(value: ThemeMode.system, child: Text('System', style: TextStyle(fontSize: settings.fontSize))),
@@ -174,9 +174,6 @@ class _SettingsViewState extends State<SettingsView> {
                       subtitle: Text(_pbService.user?.username ?? 'Not available', style: TextStyle(fontSize: settings.subfontSize)),
                     ),
                     AnimatedSwitcher(duration: Duration(seconds: 1), child: _usernameField),
-                    
-                    
-
                     SizedBox(height: 8),
                     OutlinedButton(
                       onPressed: () {
@@ -198,11 +195,11 @@ class _SettingsViewState extends State<SettingsView> {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           '/login', (Route<dynamic> route) => false);
                       },
-                      child: Text('Logout', style: TextStyle(fontSize: settings.fontSize)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
                       ),
+                      child: Text('Logout', style: TextStyle(fontSize: settings.subfontSize)),
                     ),
                   ],
                 ],

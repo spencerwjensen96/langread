@@ -55,7 +55,17 @@ class LibraryBookDetailView extends StatelessWidget {
                 onPressed: () async {
                   print('downloading ${book.toString()}');
                   await Provider.of<BookProvider>(context, listen: false).downloadBook(book);
-
+                    ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Download successful!'),
+                      action: SnackBarAction(
+                      label: 'Go Back',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      ),
+                    ),
+                    );
                 },
                 child: Text('Download to Personal Library'))
           ],

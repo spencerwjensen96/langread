@@ -72,19 +72,20 @@ class _LibraryViewState extends State<LibraryView> {
         } else if (snapshot.hasError) {
           return Center(child: Text('An error occurred'));
         } else {
-          return _buildLibraryView(snapshot.data!);
+          return _buildLibraryView(snapshot.data!, MediaQuery.of(context).size.width < 600 ? 2 : 3);
         }
       }
     );
   }
 
-  _buildLibraryView(List<LibraryBook> books) {
+  _buildLibraryView(List<LibraryBook> books, int axisCount) {
+
     return Scaffold(
       appBar: MainAppBar(title: 'My Library', homeButton: false),
       body: GridView.builder(
         padding: const EdgeInsets.all(32),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: axisCount,
           childAspectRatio: 0.7,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,

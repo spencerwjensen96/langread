@@ -308,9 +308,19 @@ class _PageContentState extends State<PageContent> {
                           showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
+                              useSafeArea: true,
                               builder: ((context) {
-                                return DictionaryEntry(
-                                    word: word, context: widget.content);
+                                return DraggableScrollableSheet(
+                                    expand: false,
+                                    snap: true,
+                                    builder: (_, controller) {
+                                      return SingleChildScrollView(
+                                          controller: controller,
+                                          child: 
+                                          DictionaryEntry(
+                                              word: word,
+                                              context: widget.content));
+                                    });
                               }));
                         }
                         setState(() {

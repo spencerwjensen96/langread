@@ -9,7 +9,7 @@ class SettingsProvider extends ChangeNotifier{
   }
 
   double get fontSize => prefs.getDouble('fontSize') ?? 26;
-  double get subfontSize => prefs.getDouble('fontSize') - 4 ?? 22;
+  double get subfontSize => prefs.getDouble('fontSize') ?? 22;
   double get superfontSize => prefs.getDouble('fontSize') ?? 30;
   double get lineHeight => prefs.getDouble('lineHeight') ?? 2;
 
@@ -30,7 +30,8 @@ class SettingsProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  static ThemeMode getMode(String mode){
+  static ThemeMode getMode(String? mode){
+    if(mode == null) return ThemeMode.system;
     switch (mode.trim()){
       case 'system': return ThemeMode.system;
       case 'light': return ThemeMode.light;
