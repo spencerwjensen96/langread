@@ -1,5 +1,5 @@
 <p align="center" width="100%">
-    <img width="33%" src="ios/Runner/Assets.xcassets/AppIcon.appiconset/152.png?raw=true">
+    <img width="33%" src="ios/Runner/Assets.xcassets/AppIcon.appiconset/72.png?raw=true">
 </p>
 
 # LangRead
