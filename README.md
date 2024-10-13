@@ -1,3 +1,7 @@
+<p align="center" width="100%">
+    <img width="33%" src="ios/Runner/Assets.xcassets/AppIcon.appiconset/152.png?raw=true">
+</p>
+
 # LangRead
 
 LangRead is a Flutter application designed to help users improve their language reading skills through interactive exercises and engaging content.
