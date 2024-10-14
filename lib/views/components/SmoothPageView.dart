@@ -317,7 +317,7 @@ class _PageContentState extends State<PageContent> {
                                       return SingleChildScrollView(
                                           controller: controller,
                                           child: 
-                                          DictionaryEntry(
+                                          DictionaryEntryWidget(
                                               word: word,
                                               context: widget.content));
                                     });

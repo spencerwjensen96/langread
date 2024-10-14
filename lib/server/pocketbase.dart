@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:langread/server/methods/auth.dart';
 import 'package:langread/server/methods/books.dart';
+import 'package:langread/server/methods/dictionaries.dart';
 import 'package:langread/server/models/user.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,9 +22,7 @@ class PocketBaseService {
     return _instance;
   }
 
-  PocketBaseService._internal() {
-
-  }
+  PocketBaseService._internal();
 
   void initialize(SharedPreferencesWithCache prefsWithCache) {
     // Perform any initialization tasks here
@@ -53,4 +52,6 @@ class PocketBaseService {
   BooksPocketbase get books => BooksPocketbase(_pb);
 
   AuthPocketbase get auth => AuthPocketbase(_pb);
+
+  DictionariesPocketBase get dictionaries => DictionariesPocketBase(_pb);
 }

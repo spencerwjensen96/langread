@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:langread/config/SharedPreferences.dart';
+import 'package:langread/providers/DictionaryProvider.dart';
 import 'package:langread/providers/VocabProviders.dart';
 import 'package:langread/providers/SettingsProvider.dart';
 import 'package:langread/providers/BookProvider.dart';
@@ -20,7 +21,6 @@ import 'config/ThemeData.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   SharedPreferencesWithCache prefsWithCache = await SharedPreferencesConfig.initalizeSharedPreferences();
-  // PocketBaseService();
   PocketBaseService().initialize(prefsWithCache);
 
   runApp(MultiProvider(
@@ -28,7 +28,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => VocabularyProvider()),
         ChangeNotifierProvider(
       create: (context) => SettingsProvider(prefsWithCache)),
-      ChangeNotifierProvider(create: (context) => BookProvider(prefsWithCache)),
+        ChangeNotifierProvider(create: (context) => BookProvider(prefsWithCache)),
+        Provider(create: (context) => DictionaryProvider()),
       ],
       child: MyApp()));
 }
