@@ -9,11 +9,13 @@ class PublicLibraryScreen extends StatelessWidget {
 
   final BooksPocketbase booksService = PocketBaseService().books;
 
+  final String languageLearning = 'swedish';
+
   PublicLibraryScreen({super.key});
 
   Future<List<LibraryBook>> fetchBooks() async {
     try {
-      return await booksService.fetchLibraryBooks();
+      return await booksService.fetchLibraryBooks(language: languageLearning);
     } catch (e) {
       print('Error fetching books: $e');
       return [];

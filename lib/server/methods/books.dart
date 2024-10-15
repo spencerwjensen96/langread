@@ -15,11 +15,11 @@ class BooksPocketbase {
   }
 
   Future<List<LibraryBook>> fetchLibraryBooks(
-      {int page = 1, int perPage = 20}) async {
+      {int page = 1, int perPage = 20, String language = ''}) async {
     try {
       final response = await _pb
           .collection('library_books')
-          .getList(page: page, perPage: perPage);
+          .getList(query: {'language': language}, page: page, perPage: perPage);
       return response.items.map((item) {
         return LibraryBook(
           id: item.id,
