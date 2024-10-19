@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../providers/SettingsProvider.dart';
 
 class SettingsView extends StatefulWidget {
+  const SettingsView({super.key});
+
   @override
   State<StatefulWidget> createState() => _SettingsViewState();
 }
@@ -23,7 +25,7 @@ class _SettingsViewState extends State<SettingsView> {
                       onPressed: () {
                         _animateToNewWidget();
                       },
-                      child: Text('Change Username'),
+                      child: const Text('Change Username'),
                     );
   }
 
@@ -33,14 +35,14 @@ class _SettingsViewState extends State<SettingsView> {
       _usernameField = Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.chevron_left),
+                          icon: const Icon(Icons.chevron_left),
                           onPressed: () {
                             setState(() {
                               _usernameField = OutlinedButton(
                                 onPressed: () {
                                   _animateToNewWidget();
                                 },
-                                child: Text('Change Username'),
+                                child: const Text('Change Username'),
                               );
                             });
                           },
@@ -54,12 +56,12 @@ class _SettingsViewState extends State<SettingsView> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         TextButton(
                           onPressed: () {
                             // TODO: Implement username change
                           },
-                          child: Text('Change Username'),
+                          child: const Text('Change Username'),
                         ),
                       ],
                     );
@@ -74,9 +76,9 @@ class _SettingsViewState extends State<SettingsView> {
 
   Widget _buildSettingSection(String title, List<Widget> children) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -85,7 +87,7 @@ class _SettingsViewState extends State<SettingsView> {
               style: TextStyle(fontSize: Provider.of<SettingsProvider>(context, listen: false).superfontSize,
               fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ...children,
           ],
         ),

@@ -23,7 +23,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Signup failed. Please try again.'),
           backgroundColor: Colors.red,
         ),
@@ -42,31 +42,31 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _confirmPasswordController,
-              decoration: InputDecoration(labelText: 'Confirm Password'),
+              decoration: const InputDecoration(labelText: 'Confirm Password'),
               obscureText: true,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _signup,
-              child: Text('Signup'),
+              child: const Text('Signup'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
           ],
         ),

@@ -30,9 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _widgetOptions = Future.value([
-      LibraryView(),
-      CircularProgressIndicator(),
-      VocabListView(),
+      const LibraryView(),
+      const CircularProgressIndicator(),
+      const VocabListView(),
       SettingsView(),
     ]);
     _loadLastBookRead();
@@ -42,9 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
     lastBookRead =
         await Provider.of<BookProvider>(context, listen: false).lastBookRead;
     _widgetOptions = Future.value([
-      LibraryView(),
+      const LibraryView(),
       ReadingView(book: lastBookRead),
-      VocabListView(),
+      const VocabListView(),
       SettingsView(),
     ]);
     setState(() {});
@@ -57,10 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  _buildHomeScreen(List<Widget> _widgetOptions) {
+  _buildHomeScreen(List<Widget> widgetOptions) {
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(widget.selectedIndex),
+        child: widgetOptions.elementAt(widget.selectedIndex),
       ),
       bottomNavigationBar: _isReading
           ? null
@@ -96,11 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
         future: _widgetOptions,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No books available'));
+            return const Center(child: Text('No books available'));
           } else {
             return _buildHomeScreen(snapshot.data!);
           }

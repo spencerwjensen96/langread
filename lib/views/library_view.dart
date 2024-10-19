@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../providers/BookProvider.dart';
 
 class LibraryView extends StatefulWidget {
+  const LibraryView({super.key});
+
   @override
   _LibraryViewState createState() => _LibraryViewState();
 }

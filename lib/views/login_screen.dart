@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Login failed. Please try again.'),
           backgroundColor: Colors.red,
         ),
@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: const MainAppBar(title: 'Login', homeButton: false,),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width / 2,
@@ -45,26 +45,26 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _passwordController,
-                  decoration: InputDecoration(labelText: 'Password'),
+                  decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _login,
-                  child: Text('Login'),
+                  child: const Text('Login'),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil('/signup', (route) => false);
                   },
-                  child: Text('Create an account'),
+                  child: const Text('Create an account'),
                 ),
               ],
             ),

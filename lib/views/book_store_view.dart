@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:langread/views/components/AppBar.dart';
 
 class BookStoreScreen extends StatelessWidget {
-    @override
+
+  const BookStoreScreen({super.key});
+
+  @override
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: MainAppBar(title: 'Book Store', homeButton: true),

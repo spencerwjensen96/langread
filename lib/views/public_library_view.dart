@@ -31,16 +31,16 @@ class PublicLibraryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(title: 'Public Library', homeButton: true,),
+      appBar: const MainAppBar(title: 'Public Library', homeButton: true,),
       body: FutureBuilder<List<LibraryBook>>(
         future: fetchBooks(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No books available'));
+            return const Center(child: Text('No books available'));
           } else {
             var books = snapshot.data!;
             return GridView.builder(

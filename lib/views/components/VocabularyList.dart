@@ -5,22 +5,23 @@ import 'package:provider/provider.dart';
 import '../../providers/VocabProviders.dart';
 
 class VocabularyList extends StatelessWidget {
+  const VocabularyList({super.key});
 
   deleteButton (context) => IconButton(
-            icon: Icon(Icons.delete_sweep),
+            icon: const Icon(Icons.delete_sweep),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Clear Vocabulary'),
-                  content: Text('Are you sure you want to clear all vocabulary items?'),
+                  title: const Text('Clear Vocabulary'),
+                  content: const Text('Are you sure you want to clear all vocabulary items?'),
                   actions: [
                     TextButton(
-                      child: Text('Cancel'),
+                      child: const Text('Cancel'),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     TextButton(
-                      child: Text('Clear'),
+                      child: const Text('Clear'),
                       onPressed: () async {
                         await Provider.of<VocabularyProvider>(context, listen: false).clearAll();
                         Navigator.of(context).pop();
@@ -39,7 +40,7 @@ class VocabularyList extends StatelessWidget {
       body: Consumer<VocabularyProvider>(
         builder: (context, vocabularyProvider, child) {
           if (vocabularyProvider.items.isEmpty) {
-            return Center(
+            return const Center(
               child: Text('Your vocabulary list is empty.'),
             );
           }
@@ -52,8 +53,8 @@ class VocabularyList extends StatelessWidget {
                 background: Container(
                   color: Colors.red,
                   alignment: Alignment.centerRight,
-                  padding: EdgeInsets.only(right: 20),
-                  child: Icon(Icons.delete, color: Colors.white),
+                  padding: const EdgeInsets.only(right: 20),
+                  child: const Icon(Icons.delete, color: Colors.white),
                 ),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) async {
@@ -72,23 +73,23 @@ class VocabularyList extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Translation: ${item.translation}'),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text('Example: ${item.sentence}'),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text('Added: ${item.dateAdded.toString().split(' ')[0]}'),
                           ],
                         ),
                         actions: [
                           TextButton(
                             style: TextButton.styleFrom(foregroundColor: Colors.red),
-                            child: Text('Delete Word'),
+                            child: const Text('Delete Word'),
                             onPressed: () => {
                                 vocabularyProvider.removeItem(item),
                                 Navigator.of(context).pop(),
                               }
                           ),
                           TextButton(
-                            child: Text('Close'),
+                            child: const Text('Close'),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],
@@ -102,7 +103,7 @@ class VocabularyList extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           // TODO: Implement add new vocabulary item functionality
         },

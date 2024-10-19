@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
             '/vocabulary': (context) => HomeScreen(selectedIndex: 2,),
             '/settings': (context) => HomeScreen(selectedIndex: 3,),
             '/public-library': (context) => PublicLibraryScreen(),
-            '/bookstore': (context) => BookStoreScreen(),
+            '/bookstore': (context) => const BookStoreScreen(),
             '/book': (context) => LibraryBookDetailView(book: (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['book']),
           },
         );

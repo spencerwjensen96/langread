@@ -8,7 +8,7 @@ class LibraryBookDetailView extends StatelessWidget {
   final LibraryBook book;
   // BooksPocketbase booksService = PocketBaseService().books;
 
-  LibraryBookDetailView({super.key, required this.book});
+  const LibraryBookDetailView({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {

@@ -24,7 +24,7 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   late PageController _pageController;
   double _currentPage = 0;
   bool _hasInteracted = false;
-  List<String> _interactedWords = <String>[];
+  final List<String> _interactedWords = <String>[];
   bool _isLoading = true;
 
   @override
