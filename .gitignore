@@ -25,6 +25,8 @@ migrate_working_dir/
 backend/pb_data/
 backend/dictionaries/
 
+lib/external_lib/
+
 devtools_options.yaml
 
 # Flutter/Dart/Pub related
