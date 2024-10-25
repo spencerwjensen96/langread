@@ -119,11 +119,11 @@ class BookProvider extends ChangeNotifier {
         print('Book already downloaded');
         return;
       }
-      final response = await booksService.fetchBookPages(id);
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/books/$id/pages.json');
-      await file.create(recursive: true);
-      await file.writeAsString(response.pages.join('\n'));
+      await booksService.fetchBookFile(id);
+      // final directory = await getApplicationDocumentsDirectory();
+      // final file = File('${directory.path}/books/$id/$id.epub');
+      // await file.create(recursive: true);
+      // await file.writeAsBytes(response.);
     } catch (e) {
       print('Error fetching book pages: $e');
     }

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:langread/providers/BookProvider.dart';
 import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/server/pocketbase.dart';
 import 'package:langread/views/components/AppBar.dart';
+import 'package:langread/views/components/EpubReader.dart';
 import 'package:provider/provider.dart';
 import 'package:langread/views/components/SmoothPageView.dart';
 
@@ -19,18 +22,20 @@ class ReadingView extends StatefulWidget {
 
 class _ReadingViewState extends State<ReadingView> {
   late Future<BookPages> _pages;
+  late Future<File> _bookFile;
 
  @override
   void initState(){
     super.initState();
     _pages = widget.booksService.fetchBookPages(widget.book.id);
+    _bookFile = widget.booksService.fetchBookFile(widget.book.id);
     Provider.of<BookProvider>(context, listen: false).setLastBookRead(widget.book);
   }
 
 @override
   Widget build(BuildContext context) {
-    return FutureBuilder<BookPages>(
-      future: _pages,
+    return FutureBuilder<File>(
+      future: _bookFile,
       builder: (context, snapshot) {
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,10 +49,10 @@ class _ReadingViewState extends State<ReadingView> {
             body: Center(child: Text('Error: ${snapshot.error}')),
           );
         } else {
-          final List<String> samplePages = snapshot.data?.pages ?? [];
+          final File file = snapshot.data!;
           return Scaffold(
             appBar: MainAppBar(title: widget.book.title, homeButton: true),
-            body: SmoothPageView(book: widget.book, pages: samplePages),
+            body: EpubReader(book: widget.book, bookFile: file),
           );
         }
       },

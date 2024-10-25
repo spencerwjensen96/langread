@@ -62,4 +62,30 @@ class BooksPocketbase {
     final List<String> jsonData = const LineSplitter().convert(contents);
     return BookPages(pages: jsonData);
     }
+
+    Future<File> fetchBookFile(String bookId) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/books/$bookId/$bookId.epub');
+    print("${directory.path}/books/$bookId/");
+
+    if (!await file.exists()) {
+      try {
+        final pb_response = await _pb
+            .collection('book_files')
+            .getFirstListItem('book.id="$bookId"');
+        var url = _pb.files.getUrl(pb_response, pb_response.data['epub_file'], query: {'download': true});
+        final httpClient = HttpClient();
+        final request = await httpClient.getUrl(url);
+        final http_response = await request.close();
+        final bytes = await consolidateHttpClientResponseBytes(http_response);
+        await file.create(recursive: true);
+        await file.writeAsBytes(bytes);
+      } catch (e) {
+        throw Exception('Error fetching books: $e');
+      }
+    }
+
+    return file;
 }
+}
+
