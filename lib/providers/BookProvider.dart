@@ -73,6 +73,29 @@ class BookProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> uploadEpubFile(File file, {required String title, required String author, required String language, required String genre}) async {
+    var directory = await getApplicationDocumentsDirectory();
+    // print(directory.path);
+
+    var id = title.replaceAll(RegExp(r'\s'), '_');
+
+    LibraryBook book = LibraryBook(id: id, title: title, author: author, description: 'epub uploaded by user', coverUrl: 'https://via.placeholder.com/150', dateAdded: DateTime.now(), genre: genre, language: language);
+    _saveEpubToLocalFile(file, id, directory.path);
+    _addBookToLocalFile(book);
+
+    notifyListeners();
+  }
+
+  Future<void> _saveEpubToLocalFile(File file, String id, String path) async {
+    final localFile = File('$path/books/$id/$id.epub');
+
+    if (!await localFile.exists()) {
+      await localFile.create(recursive: true);
+      await file.copy(localFile.path);
+    }
+    print('file created at ${localFile.path}');
+  }
+
   Future<void> _ensureCorrectDictionaryExistLocally(String source, String target) async {
 
   }
@@ -120,10 +143,7 @@ class BookProvider extends ChangeNotifier {
         return;
       }
       await booksService.fetchBookFile(id);
-      // final directory = await getApplicationDocumentsDirectory();
-      // final file = File('${directory.path}/books/$id/$id.epub');
-      // await file.create(recursive: true);
-      // await file.writeAsBytes(response.);
+
     } catch (e) {
       print('Error fetching book pages: $e');
     }

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/BookCard.dart';
@@ -33,7 +36,7 @@ class _LibraryViewState extends State<LibraryView> {
       context: context,
       builder: (context) => AlertDialog(
         content: Container(
-          height: 150,
+          height: 180,
           child: Column(
             children: <Widget>[
               ListTile(
@@ -52,6 +55,92 @@ class _LibraryViewState extends State<LibraryView> {
                   Navigator.pushNamed(context, '/bookstore');
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.devices),
+                title: Text('Add From Device'),
+                onTap: () async {
+                  File uploadFile;
+                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['epub'],
+                  );
+
+                  if (result != null) {
+                    PlatformFile file = result.files.first;
+                    uploadFile = File(file.path!);
+                  } else {
+                    return;
+                  }
+                    String? title;
+                    String? author;
+                    String? language;
+                    String? genre;
+
+                    await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                      title: Text('Enter Book Details'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                        TextField(
+                          decoration: InputDecoration(labelText: 'Title'),
+                          onChanged: (value) {
+                          title = value;
+                          },
+                        ),
+                        TextField(
+                          decoration: InputDecoration(labelText: 'Author'),
+                          onChanged: (value) {
+                          author = value;
+                          },
+                        ),
+                        TextField(
+                          decoration: InputDecoration(labelText: 'Language'),
+                          onChanged: (value) {
+                          language = value;
+                          },
+                        ),
+                        TextField(
+                          decoration: InputDecoration(labelText: 'Genre'),
+                          onChanged: (value) {
+                          genre = value;
+                          },
+                        ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        ),
+                        TextButton(
+                        child: Text('Submit'),
+                        onPressed: () async {
+                          if (title == null || author == null || language == null || genre == null) {
+                            return;
+                          }
+                          await Provider.of<BookProvider>(context, listen: false).uploadEpubFile(
+                              uploadFile,
+                              title: title!,
+                              author: author!,
+                              language: language!,
+                              genre: genre!,
+                              );
+                              print('upload epub');
+                          Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
+                        },
+                        ),
+                      ],
+                      );
+                    },
+                  );
+                },
+              )
             ],
           ),
         ),

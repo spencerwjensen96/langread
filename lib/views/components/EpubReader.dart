@@ -53,7 +53,7 @@ class _EpubReaderState extends State<EpubReader> {
     return element.text ?? '';
   }
 
-  List<String> _getParagraphsFromBook(paragraphs, {int minWordsPerPage = 30}) {
+  List<String> _getParagraphsFromBook(paragraphs, {int minWordsPerPage = 60}) {
     List<String> finalParagraphs = [];
     String page = '';
     int wordCount = 0;
@@ -67,7 +67,7 @@ class _EpubReaderState extends State<EpubReader> {
       int newParagraphWordCount = newParagraph.split(" ").length;
 
       if (wordCount + newParagraphWordCount >= minWordsPerPage) {
-      finalParagraphs.add(page.trim());
+      finalParagraphs.add("\t\t\t\t\t\t${page.trim()}");
       page = '';
       wordCount = 0;
       }
@@ -78,7 +78,7 @@ class _EpubReaderState extends State<EpubReader> {
       wordCount += newParagraphWordCount;
     }
     if (page.isNotEmpty) {
-      finalParagraphs.add(page.trim());
+      finalParagraphs.add("\t\t\t\t\t\t${page.trim()}");
     }
     return finalParagraphs;
   }
