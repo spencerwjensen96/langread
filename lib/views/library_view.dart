@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:langread/server/models/book.dart';
+import 'package:langread/server/models/enums.dart';
+import 'package:langread/utils/utils.dart';
 import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/BookCard.dart';
 import 'package:provider/provider.dart';
@@ -40,24 +42,24 @@ class _LibraryViewState extends State<LibraryView> {
           child: Column(
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.library_books),
-                title: Text('Public Library'),
+                leading: const Icon(Icons.library_books),
+                title: const Text('Public Library'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/public-library');
                 },
               ),
               ListTile(
-                leading: Icon(Icons.store),
-                title: Text('Book Store'),
+                leading: const Icon(Icons.store),
+                title: const Text('Book Store'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/bookstore');
                 },
               ),
               ListTile(
-                leading: Icon(Icons.devices),
-                title: Text('Add From Device'),
+                leading: const Icon(Icons.devices),
+                title: const Text('Add From Device'),
                 onTap: () async {
                   File uploadFile;
                   FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -85,28 +87,44 @@ class _LibraryViewState extends State<LibraryView> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                         TextField(
-                          decoration: InputDecoration(labelText: 'Title'),
+                          decoration: const InputDecoration(labelText: 'Title'),
                           onChanged: (value) {
                           title = value;
                           },
                         ),
                         TextField(
-                          decoration: InputDecoration(labelText: 'Author'),
+                          decoration: const InputDecoration(labelText: 'Author'),
                           onChanged: (value) {
                           author = value;
                           },
                         ),
-                        TextField(
-                          decoration: InputDecoration(labelText: 'Language'),
-                          onChanged: (value) {
-                          language = value;
-                          },
+                        DropdownMenu(
+                            label: const Text('Language'),
+                            dropdownMenuEntries: Language.values.map((Language language) {
+                            return DropdownMenuEntry(
+                              value: language,
+                              label: language.displayName.toCapitalized,
+                            );
+                            }).toList(),
+                            onSelected: (Language? value) {
+                            setState(() {
+                              language = value?.name;
+                            });
+                            },
                         ),
-                        TextField(
-                          decoration: InputDecoration(labelText: 'Genre'),
-                          onChanged: (value) {
-                          genre = value;
-                          },
+                        DropdownMenu(
+                            label: const Text('Genre'),
+                            dropdownMenuEntries: BookGenre.values.map((BookGenre genre) {
+                              return DropdownMenuEntry(
+                                value: genre,
+                                label: genre.displayName.toTitleCase,
+                              );
+                            }).toList(),
+                            onSelected: (BookGenre? value) {
+                            setState(() {
+                              genre = value?.name;
+                            });
+                            },
                         ),
                         ],
                       ),
