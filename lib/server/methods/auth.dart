@@ -11,7 +11,15 @@ class AuthPocketbase {
     _pb = pb;
   }
 
-    Future<bool> signUp(String email, String password) async {
+  Future<void> requestResetPassword(String email) async {
+    try {
+      await _pb.collection('users').requestPasswordReset(email);
+    } catch (e) {
+      debugPrint('Error during password reset: $e');
+    }
+  }
+
+  Future<bool> signUp(String email, String password) async {
     try {
       final user = await _pb.collection('users').create(body: {
         'email': email,

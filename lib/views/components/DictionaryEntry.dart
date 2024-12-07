@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:langread/models/vocabulary_item.dart';
 import 'package:langread/providers/DictionaryProvider.dart';
 import 'package:langread/providers/VocabProviders.dart';
-import 'package:langread/utils/deepl.dart';
+// import 'package:langread/utils/deepl.dart';
 import 'package:provider/provider.dart';
-import 'package:xml/xml.dart';
 
 class DictionaryEntryWidget extends StatefulWidget {
   final String word;
@@ -70,11 +67,11 @@ class _DictionaryEntryState extends State<DictionaryEntryWidget> {
 
   Future<String> fetchTranslation(String word, String context) async {
     // var response = await DeepL.translateText(
-    //     text: word, sourceLang: 'sv', targetLang: 'en', context: context);
+    //     text: word, sourceLang: 'fr', targetLang: 'en', context: context);
     var response = 'temp.';
-    if (response == null) {
-      return 'Translation not found';
-    }
+    // if (response == null) {
+    //   return 'Translation not found';
+    // }
     return response;
   }
 

@@ -193,3 +193,37 @@ class _BookCardState extends State<BookCard>
     );
   }
 }
+
+class EmptyLibraryCard extends StatelessWidget {
+  const EmptyLibraryCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.library_books,
+            size: 48,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Your library is empty',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Add books to your library to get started',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

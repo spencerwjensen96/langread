@@ -9,6 +9,7 @@ import 'package:langread/views/library_book_detail_view.dart';
 import 'package:langread/views/book_store_view.dart';
 import 'package:langread/views/login_screen.dart';
 import 'package:langread/views/public_library_view.dart';
+import 'package:langread/views/reset_password.dart';
 import 'package:langread/views/signup_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -69,6 +70,8 @@ class MyApp extends StatelessWidget {
                 return SignupScreen();
               }
             },
+            '/reset-password': (context) => ResetPasswordScreen(),
+            '/reset-password-sent': (context) => const ResetPasswordSentScreen(),
             '/home': (context) => HomeScreen(selectedIndex: 0,),
             '/library': (context) => HomeScreen(selectedIndex: 0,),
             '/reading': (context) => HomeScreen(selectedIndex: 1,),

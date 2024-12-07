@@ -2,18 +2,19 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:langread/providers/BookProvider.dart';
 import 'package:langread/server/models/book.dart';
-import 'package:langread/utils/utils.dart';
 import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/DictionaryEntry.dart';
 import 'package:langread/views/components/QuizPopup.dart';
 import 'package:provider/provider.dart';
 import '../../providers/SettingsProvider.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class SmoothPageView extends StatefulWidget {
   final List<String> pages;
+  final List<(String, Html)> images;
   final LibraryBook book;
-
-  const SmoothPageView({Key? key, required this.pages, required this.book})
+  const SmoothPageView(
+      {Key? key, required this.pages, required this.images, required this.book})
       : super(key: key);
 
   @override
@@ -128,7 +129,10 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                 );
               },
               child: PageContent(
-                  content: widget.pages[index], onInteraction: _onInteraction),
+                content: widget.pages[index],
+                images: widget.images,
+                onInteraction: _onInteraction,
+              ),
             );
           },
           onPageChanged: (value) {
@@ -198,16 +202,16 @@ class _SmoothPageViewState extends State<SmoothPageView> {
   }
 }
 
-bool _isSpecialPage(String content) {
-  return content.contains("#titlepage#") || content.contains("#chapter#");
-}
-
 class PageContent extends StatefulWidget {
   final String content;
+  final List<(String, Html)> images;
   final Function onInteraction;
 
   const PageContent(
-      {super.key, required this.content, required this.onInteraction});
+      {super.key,
+      required this.content,
+      required this.images,
+      required this.onInteraction});
 
   @override
   _PageContentState createState() => _PageContentState();
@@ -228,68 +232,24 @@ class _PageContentState extends State<PageContent> {
   Widget build(BuildContext context) {
     return Consumer<SettingsProvider>(
       builder: (context, settings, child) {
-        if (_isSpecialPage(widget.content)) {
-          var contentString = widget.content;
-          var re = RegExp(r'#(\w*)#');
-          var pageType = re.firstMatch(contentString)![1];
-          var parsedTags = parseCustomTags(contentString.replaceAll(re, ''));
-
-          switch (pageType) {
-            case 'titlepage':
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Spacer(flex: 1),
-                  parsedTags['title'] != null
-                      ? Text(parsedTags['title']!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: settings.superfontSize,
-                              fontWeight: FontWeight.bold))
-                      : Container(),
-                  const SizedBox(height: 16),
-                  parsedTags['author'] != null
-                      ? Text(parsedTags['author']!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: settings.subfontSize))
-                      : Container(),
-                  const Spacer(flex: 3),
-                ],
-              );
-            case 'chapter':
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Spacer(flex: 1),
-                  parsedTags['heading'] != null
-                      ? Text(parsedTags['heading']!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: settings.superfontSize,
-                              fontWeight: FontWeight.bold))
-                      : Container(),
-                  const Spacer(flex: 2),
-                  parsedTags['pages'] != null
-                      ? Text(parsedTags['pages']!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: settings.subfontSize))
-                      : Container(),
-                  const Spacer(flex: 1),
-                ],
-              );
-            default:
-              return Center(child: Text(contentString));
-          }
-        }
         final words = widget.content.replaceAll(r'\n', '\n').split(' ');
         return Padding(
           padding: const EdgeInsets.all(48.0),
           child: SingleChildScrollView(
-            child: RichText(
-              text: TextSpan(
+            child: Text.rich(
+              TextSpan(
                 children: words.asMap().entries.map((entry) {
                   final index = entry.key;
-                  final word = entry.value;
+                  final word = entry.value.replaceAll(RegExp(r'^\s+'), '');
+                  if (word.startsWith(RegExp("#img[0-9]+"))) {
+                    var image = widget.images
+                        .firstWhere(
+                          (img) => img.$1 == word.trim(),
+                          orElse: () => ('', Html(data: '')),
+                        )
+                        .$2;
+                    return WidgetSpan(child: image);
+                                    }
                   return TextSpan(
                     text: '$word ',
                     style: TextStyle(
@@ -316,8 +276,7 @@ class _PageContentState extends State<PageContent> {
                                     builder: (_, controller) {
                                       return SingleChildScrollView(
                                           controller: controller,
-                                          child: 
-                                          DictionaryEntryWidget(
+                                          child: DictionaryEntryWidget(
                                               word: word,
                                               context: widget.content));
                                     });

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -34,8 +33,7 @@ class _EpubReaderState extends State<EpubReader> {
   Future<void> _loadEpub() async {
     setState(() {
       _epubReaderController = EpubController(
-        document:
-            EpubDocument.openFile(widget.bookFile),
+        document: EpubDocument.openFile(widget.bookFile),
       );
       _pageController = PageController();
       loaded = Future.value(true);
@@ -50,37 +48,62 @@ class _EpubReaderState extends State<EpubReader> {
   }
 
   String _extractTextFromElement(dom.Element element) {
-    return element.text ?? '';
+    if (element.text == ''){
+      return element.outerHtml;
+    }
+    return element.text;
   }
 
-  List<String> _getParagraphsFromBook(paragraphs, {int minWordsPerPage = 60}) {
+  (List<String>, List<(String, Html)>) _getParagraphsFromBook(document, paragraphs, {int minWordsPerPage = 60}) {
     List<String> finalParagraphs = [];
+    List<(String, Html)> images = [];
     String page = '';
     int wordCount = 0;
 
     for (var paragraph in paragraphs) {
       String newParagraph = _extractTextFromElement(paragraph.element);
+      if (newParagraph.contains("img")) {
+        var imgId = "#img${images.length}";
+        images.add((imgId, Html(data: newParagraph, extensions: [
+            TagExtension(
+              tagsToExtend: {"img"},
+              builder: (imageContext) {
+                final url =
+                    imageContext.attributes['src']!.replaceAll('../', '');
+                final content = Uint8List.fromList(
+                    document.Content!.Images![url]!.Content!);
+                return FlutterImage.Image(
+                  image: MemoryImage(content),
+                );
+              },
+            ),
+          ],)));
+          newParagraph = imgId;
+          // finalParagraphs.add(imgId);
+        // continue;
+      }
       if (newParagraph.isEmpty) {
-        finalParagraphs.add(newParagraph);
         continue;
       }
       int newParagraphWordCount = newParagraph.split(" ").length;
 
       if (wordCount + newParagraphWordCount >= minWordsPerPage) {
-      finalParagraphs.add("\t\t\t\t\t\t${page.trim()}");
-      page = '';
-      wordCount = 0;
+        finalParagraphs.add("\t\t\t\t\t\t${page.trim()}");
+        page = '';
+        wordCount = 0;
       }
 
       page = """$page
       
-      ${newParagraph.replaceAll(RegExp('\n'), ' ')}""".trim();
+      ${newParagraph.replaceAll(RegExp('\n'), ' ')}"""
+          .trim();
       wordCount += newParagraphWordCount;
     }
+
     if (page.isNotEmpty) {
       finalParagraphs.add("\t\t\t\t\t\t${page.trim()}");
     }
-    return finalParagraphs;
+    return (finalParagraphs, images);
   }
 
   @override
@@ -96,17 +119,30 @@ class _EpubReaderState extends State<EpubReader> {
           return EpubView(
             controller: _epubReaderController,
             builders: EpubViewBuilders<DefaultBuilderOptions>(
-              chapterBuilder: (context, builders, document, chapters, paragraphs, index, paragraphIndex, chapterIndex, onExternalLinkPressed) =>
-                  index == 0
+              chapterBuilder: (context,
+                      builders,
+                      document,
+                      chapters,
+                      paragraphs,
+                      index,
+                      paragraphIndex,
+                      chapterIndex,
+                      onExternalLinkPressed) {
+                  // var (pages, imgs) = 
+                  
+                  return index == 0
                       ? ConstrainedBox(
                           constraints: BoxConstraints(
                               maxHeight: MediaQuery.of(context).size.height -
                                   kToolbarHeight -
                                   kBottomNavigationBarHeight),
-                          child: SmoothPageView(
-                              pages: _getParagraphsFromBook(paragraphs),
-                              book: widget.book))
-                      : Container(),
+                          child: 
+                              SmoothPageView(
+                                  pages: _getParagraphsFromBook(document, paragraphs).$1,
+                                  images: _getParagraphsFromBook(document, paragraphs).$2,
+                                  book: widget.book))
+                      : Container();
+              },
               options: DefaultBuilderOptions(
                 textStyle: TextStyle(
                   height: Provider.of<SettingsProvider>(context).lineHeight,

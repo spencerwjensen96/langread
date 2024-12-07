@@ -8,7 +8,6 @@ import 'package:langread/server/pocketbase.dart';
 import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/EpubReader.dart';
 import 'package:provider/provider.dart';
-import 'package:langread/views/components/SmoothPageView.dart';
 
 class ReadingView extends StatefulWidget {
   final LibraryBook book;
@@ -21,13 +20,12 @@ class ReadingView extends StatefulWidget {
 }
 
 class _ReadingViewState extends State<ReadingView> {
-  late Future<BookPages> _pages;
   late Future<File> _bookFile;
 
  @override
   void initState(){
     super.initState();
-    _pages = widget.booksService.fetchBookPages(widget.book.id);
+    // _pages = widget.booksService.fetchBookPages(widget.book.id);
     _bookFile = widget.booksService.fetchBookFile(widget.book.id);
     Provider.of<BookProvider>(context, listen: false).setLastBookRead(widget.book);
   }

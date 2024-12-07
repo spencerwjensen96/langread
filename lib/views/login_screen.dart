@@ -62,6 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/reset-password', (route) => false);
+                  },
+                  child: const Text('Forgot password?'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
                         .pushNamedAndRemoveUntil('/signup', (route) => false);
                   },
                   child: const Text('Create an account'),
