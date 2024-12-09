@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
             '/public-library': (context) => PublicLibraryScreen(),
             '/bookstore': (context) => const BookStoreScreen(),
             '/book': (context) => LibraryBookDetailView(book: (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['book']),
+            '/': (context) => HomeScreen(selectedIndex: 0,),
             
           },
         );

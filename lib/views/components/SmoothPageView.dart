@@ -96,109 +96,134 @@ class _SmoothPageViewState extends State<SmoothPageView> {
       );
     }
     return Scaffold(
-      body: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          if (details.primaryVelocity! > 0) {
-            // Swipe right
-            _navigateToPreviousPage();
-          } else if (details.primaryVelocity! < 0) {
-            // Swipe left
-            _navigateToNextPage();
-          }
-        },
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: widget.pages.length,
-          itemBuilder: (context, index) {
-            return AnimatedBuilder(
-              animation: _pageController,
-              builder: (context, child) {
-                double value = 1.0;
-                if (_pageController.position.haveDimensions) {
-                  value = _pageController.page! - index;
-                  value = (1 - (value.abs() * 0.5)).clamp(0.0, 1.0);
-                }
-                return Center(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height *
-                        Curves.easeInOut.transform(value),
-                    width: MediaQuery.of(context).size.width *
-                        Curves.easeInOut.transform(value),
-                    child: child,
-                  ),
-                );
-              },
-              child: PageContent(
-                content: widget.pages[index],
-                images: widget.images,
-                onInteraction: _onInteraction,
-              ),
-            );
-          },
-          onPageChanged: (value) {
-            if (value < _currentPage) {
-              setState(() {
-                _hasInteracted = false;
-                _interactedWords.clear();
-              });
+        body: GestureDetector(
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity! > 0) {
+              // Swipe right
+              _navigateToPreviousPage();
+            } else if (details.primaryVelocity! < 0) {
+              // Swipe left
+              _navigateToNextPage();
             }
-            _setBookmark(pageNumber: value);
-            if (_hasInteracted) {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return QuizPopup(
-                    pageContent: "hello",
-                    sourceLanguage: "en",
-                    targetLanguage: "sv",
-                    words: _interactedWords,
-                    onQuizComplete: () {
-                      setState(() {
-                        _hasInteracted = false;
-                        _interactedWords.clear();
-                      });
-                      Navigator.of(context).pop();
-                    },
+          },
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: widget.pages.length,
+            itemBuilder: (context, index) {
+              return AnimatedBuilder(
+                animation: _pageController,
+                builder: (context, child) {
+                  double value = 1.0;
+                  if (_pageController.position.haveDimensions) {
+                    value = _pageController.page! - index;
+                    value = (1 - (value.abs() * 0.5)).clamp(0.0, 1.0);
+                  }
+                  return Center(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          Curves.easeInOut.transform(value),
+                      width: MediaQuery.of(context).size.width *
+                          Curves.easeInOut.transform(value),
+                      child: child,
+                    ),
                   );
                 },
+                child: PageContent(
+                  content: widget.pages[index],
+                  images: widget.images,
+                  onInteraction: _onInteraction,
+                ),
               );
-            }
-          },
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/vocabulary');
-                },
-                child: Text('Vocab'),
-              ),
-              Text(
-                  'Page ${_currentPage.floor() + 1} of ${widget.pages.length}'),
-              Row(
-                children: [
-                  IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () {
-                        _navigateToPreviousPage();
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.arrow_forward),
-                      onPressed: () {
-                        _navigateToNextPage();
-                      }),
-                ],
-              ),
-            ],
+            },
+            onPageChanged: (value) {
+              if (value < _currentPage) {
+                setState(() {
+                  _hasInteracted = false;
+                  _interactedWords.clear();
+                });
+              }
+              _setBookmark(pageNumber: value);
+              if (_hasInteracted) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return QuizPopup(
+                      pageContent: "hello",
+                      sourceLanguage: "en",
+                      targetLanguage: "sv",
+                      words: _interactedWords,
+                      onQuizComplete: () {
+                        setState(() {
+                          _hasInteracted = false;
+                          _interactedWords.clear();
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  },
+                );
+              }
+            },
           ),
         ),
-      ),
-    );
+        bottomNavigationBar: Wrap(children: [
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+                trackHeight: 4,
+                trackShape: const RectangularSliderTrackShape(),
+                thumbColor: Colors.transparent,
+                thumbShape:
+                    const RoundSliderThumbShape(enabledThumbRadius: 0.0)),
+            child: Slider(
+              value: _currentPage,
+              min: 1,
+              max: (widget.pages.length - 1),
+              onChanged: (value) {
+                setState(() {
+                  _currentPage = value;
+                  _pageController.jumpToPage(value.toInt());
+                });
+              },
+            ),
+          ),
+          BottomAppBar(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: 
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/vocabulary');
+                        },
+                        child: Text('Vocab'),
+                      ),
+                      Text(
+                        'Page ${_currentPage.floor() + 1} of ${widget.pages.length}',
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            onPressed: () {
+                              _navigateToPreviousPage();
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.arrow_forward),
+                            onPressed: () {
+                              _navigateToNextPage();
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+              ),
+            ),
+          ),
+        ]));
   }
 }
 
@@ -249,7 +274,7 @@ class _PageContentState extends State<PageContent> {
                         )
                         .$2;
                     return WidgetSpan(child: image);
-                                    }
+                  }
                   return TextSpan(
                     text: '$word ',
                     style: TextStyle(

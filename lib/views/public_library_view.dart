@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:langread/server/methods/books.dart';
 import 'package:langread/server/models/book.dart';
 import 'package:langread/server/pocketbase.dart';
-import 'package:langread/views/components/AppBar.dart';
 import 'package:langread/views/components/BookCard.dart';
 
-class PublicLibraryScreen extends StatelessWidget {
+class PublicLibraryScreen extends StatefulWidget {
+  const PublicLibraryScreen({Key? key}) : super(key: key);
 
+  @override
+  _PublicLibraryScreenState createState() => _PublicLibraryScreenState();
+}
+
+class _PublicLibraryScreenState extends State<PublicLibraryScreen> {
   final BooksPocketbase booksService = PocketBaseService().books;
+  String languageLearning = 'swedish';
 
-  final String languageLearning = 'swedish';
-
-  PublicLibraryScreen({super.key});
+  final List<String> availableLanguages = [
+    'swedish',
+    'spanish',
+    'french',
+    'german',
+    'english'
+  ];
 
   Future<List<LibraryBook>> fetchBooks() async {
     try {
@@ -22,7 +32,16 @@ class PublicLibraryScreen extends StatelessWidget {
     }
   }
 
-  void Function(BuildContext, LibraryBook) _onTap(BuildContext context, LibraryBook book) {
+  void _onLanguageChanged(String? newLanguage) {
+    if (newLanguage != null && newLanguage != languageLearning) {
+      setState(() {
+        languageLearning = newLanguage;
+      });
+    }
+  }
+
+  void Function(BuildContext, LibraryBook) _onTap(
+      BuildContext context, LibraryBook book) {
     return (context, book) {
       Navigator.pushNamed(context, '/book', arguments: {'book': book});
     };
@@ -31,7 +50,25 @@ class PublicLibraryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MainAppBar(title: 'Public Library', homeButton: true,),
+      appBar: AppBar(
+        title: const Text('Public Library'),
+        leading: IconButton(
+          icon: const Icon(Icons.home),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+        ),
+        actions: [
+          DropdownButton<String>(
+            value: languageLearning,
+            onChanged: _onLanguageChanged,
+            items: availableLanguages.map((String language) {
+              return DropdownMenuItem<String>(
+                value: language,
+                child: Text(language.capitalize()),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
       body: FutureBuilder<List<LibraryBook>>(
         future: fetchBooks(),
         builder: (context, snapshot) {
@@ -53,12 +90,22 @@ class PublicLibraryScreen extends StatelessWidget {
               ),
               itemCount: books.length,
               itemBuilder: (context, index) {
-                return BookCard(book: books[index], onTap: _onTap(context, books[index]), includeMenu: false,);
+                return BookCard(
+                    book: books[index],
+                    onTap: _onTap(context, books[index]),
+                    includeMenu: false);
               },
             );
           }
         },
       ),
     );
+  }
+}
+
+// Extension to capitalize the first letter of a string
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }

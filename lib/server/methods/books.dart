@@ -19,7 +19,7 @@ class BooksPocketbase {
     try {
       final response = await _pb
           .collection('library_books')
-          .getList(query: {'language': language}, page: page, perPage: perPage);
+          .getList(filter: _pb.filter("language = {:language}", {"language": language}), page: page, perPage: perPage);
       return response.items.map((item) {
         return LibraryBook(
           id: item.id,
