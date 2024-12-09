@@ -43,10 +43,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  
         MaterialApp(
-          title: 'LangRead',
+          title: 'BookBinding',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: Provider.of<SettingsProvider>(context, listen: false).themeMode,
+          themeMode: context.watch<SettingsProvider>().themeMode,
           //home: HomeScreen(selectedIndex: 0,),
           initialRoute: '/login',
           routes: {
@@ -80,8 +80,8 @@ class MyApp extends StatelessWidget {
             '/public-library': (context) => PublicLibraryScreen(),
             '/bookstore': (context) => const BookStoreScreen(),
             '/book': (context) => LibraryBookDetailView(book: (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['book']),
+            
           },
         );
   }
 }
-    // final arguments = (arguments ?? <String, dynamic>{}) as Map;

@@ -146,8 +146,8 @@ class _SettingsViewState extends State<SettingsView> {
                       value: settings.themeMode,
                       onChanged: (ThemeMode? value) {
                         if (value != null) settings.setThemeMode(value);
-                        
-                        // Navigator.of(context).pushNamedAndRemoveUntil('/settings', (Route<dynamic> route) => false);
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/settings', (Route<dynamic> route) => false);
                       },
                       items: [
                         DropdownMenuItem(value: ThemeMode.system, child: Text('System', style: TextStyle(fontSize: settings.fontSize))),
