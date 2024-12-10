@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/server/models/enums.dart';
-import 'package:langread/utils/utils.dart';
-import 'package:langread/views/components/AppBar.dart';
-import 'package:langread/views/components/BookCard.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/server/models/enums.dart';
+import 'package:bookbinding/utils/utils.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
+import 'package:bookbinding/views/components/BookCard.dart';
 import 'package:provider/provider.dart';
 import '../providers/BookProvider.dart';
 

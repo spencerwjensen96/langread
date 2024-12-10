@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:langread/server/methods/auth.dart';
-import 'package:langread/server/methods/books.dart';
-import 'package:langread/server/methods/dictionaries.dart';
-import 'package:langread/server/models/user.dart';
+import 'package:bookbinding/server/methods/auth.dart';
+import 'package:bookbinding/server/methods/books.dart';
+import 'package:bookbinding/server/methods/dictionaries.dart';
+import 'package:bookbinding/server/models/user.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

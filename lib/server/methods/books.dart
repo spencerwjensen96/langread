@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:langread/server/models/book.dart';
+import 'package:bookbinding/server/models/book.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pocketbase/pocketbase.dart';
 

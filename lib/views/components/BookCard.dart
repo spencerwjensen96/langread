@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:langread/providers/BookProvider.dart';
-import 'package:langread/providers/SettingsProvider.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/views/reading_view.dart';
+import 'package:bookbinding/providers/BookProvider.dart';
+import 'package:bookbinding/providers/SettingsProvider.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/views/reading_view.dart';
 import 'package:provider/provider.dart';
 
 class BookCard extends StatefulWidget {

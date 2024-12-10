@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:langread/providers/SettingsProvider.dart';
+import 'package:bookbinding/providers/SettingsProvider.dart';
 import 'package:provider/provider.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget{

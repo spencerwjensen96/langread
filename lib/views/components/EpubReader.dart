@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:flutter/src/widgets/image.dart' as FlutterImage;
-import 'package:langread/providers/SettingsProvider.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/views/components/SmoothPageView.dart';
+import 'package:bookbinding/providers/SettingsProvider.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/views/components/SmoothPageView.dart';
 import 'package:provider/provider.dart';
 
 class EpubReader extends StatefulWidget {

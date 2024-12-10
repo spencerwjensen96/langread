@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:langread/server/methods/books.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/server/pocketbase.dart';
+import 'package:bookbinding/server/methods/books.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/server/pocketbase.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

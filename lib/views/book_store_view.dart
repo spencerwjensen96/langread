@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:langread/views/components/AppBar.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
 
 class BookStoreScreen extends StatelessWidget {
 

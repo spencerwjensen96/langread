@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:langread/providers/BookProvider.dart';
-import 'package:langread/server/methods/books.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/server/pocketbase.dart';
-import 'package:langread/views/components/AppBar.dart';
-import 'package:langread/views/components/EpubReader.dart';
+import 'package:bookbinding/providers/BookProvider.dart';
+import 'package:bookbinding/server/methods/books.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/server/pocketbase.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
+import 'package:bookbinding/views/components/EpubReader.dart';
 import 'package:provider/provider.dart';
 
 class ReadingView extends StatefulWidget {

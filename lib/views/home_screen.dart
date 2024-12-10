@@ -1,9 +1,9 @@
 // lib/views/home_screen.dart
 import 'package:flutter/material.dart';
-import 'package:langread/providers/BookProvider.dart';
-// import 'package:langread/models/book.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/views/vocab_view.dart';
+import 'package:bookbinding/providers/BookProvider.dart';
+// import 'package:bookbinding/models/book.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/views/vocab_view.dart';
 import 'package:provider/provider.dart';
 import 'library_view.dart';
 import 'reading_view.dart';

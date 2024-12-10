@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:langread/providers/SettingsProvider.dart';
-import 'package:langread/views/components/AppBar.dart';
+import 'package:bookbinding/providers/SettingsProvider.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
 import 'package:provider/provider.dart';
 import '../../providers/VocabProviders.dart';
 

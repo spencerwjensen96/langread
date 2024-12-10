@@ -7,12 +7,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:langread/views/library_view.dart';
-import 'package:langread/views/reading_view.dart';
-import 'package:langread/views/settings_view.dart';
+import 'package:bookbinding/views/library_view.dart';
+import 'package:bookbinding/views/reading_view.dart';
+import 'package:bookbinding/views/settings_view.dart';
 import 'package:nock/nock.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
-import 'package:langread/main.dart';
+import 'package:bookbinding/main.dart';
 
 void main() {
   setUpAll(nock.init);

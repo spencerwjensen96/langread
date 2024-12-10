@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:langread/providers/BookProvider.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/views/components/AppBar.dart';
+import 'package:bookbinding/providers/BookProvider.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
 import 'package:provider/provider.dart';
 
 class LibraryBookDetailView extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:langread/models/vocabulary_item.dart';
-import 'package:langread/providers/DictionaryProvider.dart';
-import 'package:langread/providers/VocabProviders.dart';
-// import 'package:langread/utils/deepl.dart';
+import 'package:bookbinding/models/vocabulary_item.dart';
+import 'package:bookbinding/providers/DictionaryProvider.dart';
+import 'package:bookbinding/providers/VocabProviders.dart';
+// import 'package:bookbinding/utils/deepl.dart';
 import 'package:provider/provider.dart';
 
 class DictionaryEntryWidget extends StatefulWidget {

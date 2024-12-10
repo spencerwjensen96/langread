@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:langread/views/components/AppBar.dart';
-import 'package:langread/views/components/SentenceScramble.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
+import 'package:bookbinding/views/components/SentenceScramble.dart';
 
 class QuizPopup extends StatefulWidget {
   final String pageContent;

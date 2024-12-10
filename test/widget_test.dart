@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
-import 'package:langread/main.dart';
+import 'package:bookbinding/main.dart';
 
 void main() {
   testWidgets('App renders', (WidgetTester tester) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:langread/server/pocketbase.dart';
-import 'package:langread/views/components/AppBar.dart';
+import 'package:bookbinding/server/pocketbase.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
 
 class LoginScreen extends StatefulWidget {
   

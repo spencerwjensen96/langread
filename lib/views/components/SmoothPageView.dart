@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:langread/providers/BookProvider.dart';
-import 'package:langread/server/models/book.dart';
-import 'package:langread/views/components/AppBar.dart';
-import 'package:langread/views/components/DictionaryEntry.dart';
-import 'package:langread/views/components/QuizPopup.dart';
+import 'package:bookbinding/providers/BookProvider.dart';
+import 'package:bookbinding/server/models/book.dart';
+import 'package:bookbinding/views/components/AppBar.dart';
+import 'package:bookbinding/views/components/DictionaryEntry.dart';
+import 'package:bookbinding/views/components/QuizPopup.dart';
 import 'package:provider/provider.dart';
 import '../../providers/SettingsProvider.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -176,7 +176,7 @@ class _SmoothPageViewState extends State<SmoothPageView> {
                     const RoundSliderThumbShape(enabledThumbRadius: 0.0)),
             child: Slider(
               value: _currentPage,
-              min: 1,
+              min: 0,
               max: (widget.pages.length - 1),
               onChanged: (value) {
                 setState(() {

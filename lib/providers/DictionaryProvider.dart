@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert' show utf8;
-import 'package:langread/server/methods/dictionaries.dart';
-import 'package:langread/server/pocketbase.dart';
+import 'package:bookbinding/server/methods/dictionaries.dart';
+import 'package:bookbinding/server/pocketbase.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
