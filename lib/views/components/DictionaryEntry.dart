@@ -9,8 +9,7 @@ class DictionaryEntryWidget extends StatefulWidget {
   final String word;
   final String context;
 
-  const DictionaryEntryWidget({Key? key, required this.word, required this.context})
-      : super(key: key);
+  const DictionaryEntryWidget({super.key, required this.word, required this.context});
 
   @override
   _DictionaryEntryState createState() => _DictionaryEntryState();
@@ -29,39 +28,24 @@ class _DictionaryEntryState extends State<DictionaryEntryWidget> {
 
   Future<Map<String, dynamic>> fetchWordInfo(
       String word, String context, DictionaryProvider provider) async {
-    final translation = await fetchTranslation(word, context);
-    final examples = await fetchExamples(word);
+    // final translation = await fetchTranslation(word, context);
+    // final examples = await fetchExamples(word);
     final synonyms = await fetchSynonyms(word);
     
-    // var entries = await provider.entrys(word, 'sv-en');
+    var entries = await provider.entrys(word, 'sv-en');
 
-    // DictionaryEntry? dictEntry;
+    if (entries.isEmpty) {
+      print('no entries');
+      return {'word': '"$word" not found in dictionary','translation': '', 'examples': List<Example>.empty(), 'synonyms': [''], 'pos': '', 'pronunciation': ''};
+    }
     
-    // print("${entries.length} entries in dict.");
-    // for (var e in entries){
-    //   var document = XmlDocument.parse(e.entry);
-    //   for (var node in document.children){
-    //     // print(node.attributes.map((e) => e.toString()));
-
-    //     if(node.getAttribute('d:title') != null){
-    //       dictEntry = DictionaryEntry.fromXml(node);
-    //       print(dictEntry.title);
-    //       print(dictEntry.definitions);
-    //       print(dictEntry.examples);
-    //       print(dictEntry.pronunciation);
-    //     }
-        
-    //   }
-    // }
-    
-    
-
-    
-
     return {
-      'translation': translation,
-      'examples': examples,
+      'word': entries.first.entry.title,
+      'translation': '',
+      'examples': entries.first.entry.examples,
       'synonyms': synonyms,
+      'pos': entries.first.entry.pos,
+      'pronunciation': entries.first.entry.pronunciation,
     };
   }
 
@@ -73,14 +57,6 @@ class _DictionaryEntryState extends State<DictionaryEntryWidget> {
     //   return 'Translation not found';
     // }
     return response;
-  }
-
-  Future<List<Example>> fetchExamples(String word) async {
-    // Implement example fetching logic here
-    return [
-      Example(example: 'TODO examples', translation: 'here'),
-      Example(example: 'example 2', translation: 'here')
-    ];
   }
 
   Future<List<String>> fetchSynonyms(String word) async {
@@ -101,30 +77,33 @@ class _DictionaryEntryState extends State<DictionaryEntryWidget> {
         } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No dictionary entry available'));
+          return const Center(child: Text('No dictionary entry available'));
         } else {
           final wordInfo = snapshot.data!;
           return SizedBox(
             width: MediaQuery.of(context).size.width,
-            // height: MediaQuery.of(context).size.height / 2,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.word,
+                    wordInfo['word'],
                     style: const TextStyle(
                         fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
-                  _buildSection('Translation', wordInfo['translation']),
-                  // _buildExamplesSection('Examples', wordInfo['examples']),
+                  Text(
+                    wordInfo['pos'],
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  wordInfo['translation'].isNotEmpty ? _buildSection('Translation', wordInfo['translation']) : const SizedBox.shrink(),
+                  wordInfo['examples'].isNotEmpty ? _buildExamplesSection('Examples', wordInfo['examples']) : const SizedBox.shrink(),
                   // _buildListSection('Synonyms', wordInfo['synonyms']),
                   const SizedBox(height: 16),
-                  ElevatedButton.icon(
+                  wordInfo['word'] != '"${widget.word}" not found in dictionary' ? ElevatedButton.icon(
                     onPressed: () async {
-                      print('pressed add vocab button');
                       await Provider.of<VocabularyProvider>(context,
                               listen: false)
                           .addItem(VocabularyItemModel(
@@ -135,7 +114,7 @@ class _DictionaryEntryState extends State<DictionaryEntryWidget> {
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('Add to Vocabulary List'),
-                  ),
+                  ) : const SizedBox.shrink(),
                 ],
               ),
             ),
@@ -160,23 +139,6 @@ class _DictionaryEntryState extends State<DictionaryEntryWidget> {
     );
   }
 
-  Widget _buildListSection(String title, List<String> items) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        ...items.map((item) => Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 4),
-              child: Text('• $item'),
-            )),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
   Widget _buildExamplesSection(String title, List<Example> items) {
     // print(items);
     return Column(
@@ -188,14 +150,22 @@ class _DictionaryEntryState extends State<DictionaryEntryWidget> {
         ),
         const SizedBox(height: 8),
         ...items.asMap().entries.map((item) => Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 4),
+              padding: const EdgeInsets.only(bottom: 4),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('• ${item.value.example}'),
-                  Text('• ${item.value.translation}', style: TextStyle(color: Colors.grey[300]),)
+                  Text(
+                    item.value.example,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    softWrap: true,
+                  ),
+                  Text(
+                    item.value.translation,
+                    style: TextStyle(color: Colors.grey[300]),
+                    softWrap: true,
+                  )
                 ],
               )
-
             )),
         const SizedBox(height: 16),
       ],

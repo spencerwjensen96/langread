@@ -14,6 +14,9 @@ class PublicLibraryScreen extends StatefulWidget {
 class _PublicLibraryScreenState extends State<PublicLibraryScreen> {
   final BooksPocketbase booksService = PocketBaseService().books;
   String languageLearning = 'swedish';
+  List<LibraryBook> allBooks = [];
+  List<LibraryBook> filteredBooks = [];
+  String searchQuery = '';
 
   final List<String> availableLanguages = [
     'swedish',
@@ -23,13 +26,34 @@ class _PublicLibraryScreenState extends State<PublicLibraryScreen> {
     'english'
   ];
 
-  Future<List<LibraryBook>> fetchBooks() async {
+  @override
+  void initState() {
+    super.initState();
+    _fetchBooks();
+  }
+
+  Future<void> _fetchBooks() async {
     try {
-      return await booksService.fetchLibraryBooks(language: languageLearning);
+      allBooks =
+          await booksService.fetchLibraryBooks(language: languageLearning);
+      _filterBooks();
     } catch (e) {
       print('Error fetching books: $e');
-      return [];
     }
+  }
+
+  void _filterBooks() {
+    setState(() {
+      if (searchQuery.isEmpty) {
+        filteredBooks = allBooks;
+      } else {
+        filteredBooks = allBooks
+            .where((book) =>
+                book.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                book.author.toLowerCase().contains(searchQuery.toLowerCase()))
+            .toList();
+      }
+    });
   }
 
   void _onLanguageChanged(String? newLanguage) {
@@ -40,11 +64,41 @@ class _PublicLibraryScreenState extends State<PublicLibraryScreen> {
     }
   }
 
-  void Function(BuildContext, LibraryBook) _onTap(
+  void Function(BuildContext, LibraryBook) _onBookTap(
       BuildContext context, LibraryBook book) {
     return (context, book) {
       Navigator.pushNamed(context, '/book', arguments: {'book': book});
     };
+  }
+
+  void _showSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Search Books'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                searchQuery = value;
+              });
+              _filterBooks();
+            },
+            decoration: const InputDecoration(
+              hintText: 'Enter book title or author',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -67,20 +121,15 @@ class _PublicLibraryScreenState extends State<PublicLibraryScreen> {
               );
             }).toList(),
           ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _showSearchDialog,
+          ),
         ],
       ),
-      body: FutureBuilder<List<LibraryBook>>(
-        future: fetchBooks(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No books available'));
-          } else {
-            var books = snapshot.data!;
-            return GridView.builder(
+      body: filteredBooks.isEmpty
+          ? const Center(child: Text('No books available'))
+          : GridView.builder(
               padding: const EdgeInsets.all(32),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
@@ -88,17 +137,14 @@ class _PublicLibraryScreenState extends State<PublicLibraryScreen> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              itemCount: books.length,
+              itemCount: filteredBooks.length,
               itemBuilder: (context, index) {
                 return BookCard(
-                    book: books[index],
-                    onTap: _onTap(context, books[index]),
+                    book: filteredBooks[index],
+                    onTap: _onBookTap(context, filteredBooks[index]),
                     includeMenu: false);
               },
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }

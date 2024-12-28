@@ -93,7 +93,6 @@ class BookProvider extends ChangeNotifier {
       await localFile.create(recursive: true);
       await file.copy(localFile.path);
     }
-    print('file created at ${localFile.path}');
   }
 
   Future<void> _ensureCorrectDictionaryExistLocally(String source, String target) async {
@@ -139,13 +138,11 @@ class BookProvider extends ChangeNotifier {
     try {
       var isDownloaded = await _bookAlreadyDownloaded(id);
       if (isDownloaded) {
-        print('Book already downloaded');
         return;
       }
       await booksService.fetchBookFile(id);
 
     } catch (e) {
-      print('Error fetching book pages: $e');
     }
   }
 
